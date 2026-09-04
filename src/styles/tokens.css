@@ -1,0 +1,168 @@
+/* ============================================
+   DESIGN TOKENS — NOVA EDITION v4
+   Palette: Deep Void · Electric Yellow-Green · Warm White
+   Typography: Plus Jakarta Sans · JetBrains Mono
+   ============================================ */
+
+:root {
+  /* ── Color Foundation ──────────────────────── */
+  --color-void:      #040406;
+  --color-deep:      #080810;
+  --color-surface:   #0E0E18;
+  --color-surface-2: #141420;
+  --color-surface-3: rgba(18, 18, 28, 0.75);
+  --color-border:    rgba(255, 255, 255, 0.07);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-bright: rgba(255, 255, 255, 0.12);
+  --color-border-accent: rgba(200, 242, 62, 0.22);
+
+  /* ── Text Hierarchy ──────────────────────────── */
+  --color-text-primary:   #F5F5F0;
+  --color-text-secondary: #7A7C8E;
+  --color-text-tertiary:  #32334A;
+  --color-text-disabled:  #1A1A2A;
+
+  /* ── Accent — Electric Yellow-Green ─────────── */
+  --color-accent:        #C8F23E;
+  --color-accent-bright: #D6FF48;
+  --color-accent-soft:   #A8D230;
+  --color-accent-dim:    #6A8E14;
+  --color-accent-ghost:  rgba(200, 242, 62, 0.06);
+  --color-accent-glow:   rgba(200, 242, 62, 0.14);
+  --color-accent-subtle: rgba(200, 242, 62, 0.03);
+  --color-accent-border: rgba(200, 242, 62, 0.18);
+
+  /* ── Secondary Accent — Violet ───────── */
+  --color-accent-2:       #9B7FFF;
+  --color-accent-2-ghost: rgba(155, 127, 255, 0.08);
+
+  /* ── Tertiary Accent — Coral ────────────── */
+  --color-accent-3:       #FF8C69;
+  --color-accent-3-ghost: rgba(255, 140, 105, 0.07);
+
+  /* ── Semantic ───────────────────────────────── */
+  --color-success: #4ADE80;
+  --color-error:   #F87171;
+  --color-warning: #FBBF24;
+
+  /* ── Typography — Nova Stack ─────────────────── */
+  --font-display: 'Plus Jakarta Sans', system-ui, sans-serif;
+  --font-system:  'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-mono:    'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-heading: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  /* ── Type Scale — Bold, Modern ──────────────── */
+  --text-2xs: clamp(9px, 0.78vw, 10px);
+  --text-xs:  clamp(10px, 0.88vw, 11px);
+  --text-sm:  clamp(11px, 0.98vw, 12px);
+  --text-base: clamp(13px, 1.1vw, 15px);
+  --text-md:   clamp(15px, 1.3vw, 17px);
+  --text-lg:   clamp(17px, 1.7vw, 21px);
+  --text-xl:   clamp(20px, 2.2vw, 26px);
+  --text-2xl:  clamp(26px, 3.0vw, 38px);
+  --text-3xl:  clamp(36px, 4.4vw, 58px);
+  --text-4xl:  clamp(52px, 7.0vw, 90px);
+  --text-5xl:  clamp(72px, 10.5vw, 148px);
+  --text-hero: clamp(88px, 15vw, 200px);
+
+  /* ── Spacing ─────────────────────────────────── */
+  --space-1:  4px;
+  --space-2:  8px;
+  --space-3:  12px;
+  --space-4:  16px;
+  --space-5:  20px;
+  --space-6:  24px;
+  --space-8:  32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  /* ── Section Layout ─────────────────────────── */
+  --section-padding-x: clamp(16px, 4.5vw, 96px);
+  --section-padding-y: clamp(56px, 9vh, 160px);
+
+  /* ── Motion — Cinematic Easing ──────────────── */
+  --ease-out-expo:    cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in-expo:     cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-inout:       cubic-bezier(0.65, 0, 0.35, 1);
+  --ease-spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-precise:     cubic-bezier(0.22, 0, 0, 1);
+  --ease-smooth:      cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-gentle:      cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+  --duration-instant:   50ms;
+  --duration-fast:      140ms;
+  --duration-normal:    280ms;
+  --duration-slow:      520ms;
+  --duration-cinematic: 900ms;
+
+  /* ── Layout ──────────────────────────────────── */
+  --max-width:         1440px;
+  --content-width:     1240px;
+  --border-radius-sm:  8px;
+  --border-radius:     14px;
+  --border-radius-lg:  20px;
+  --border-radius-xl:  28px;
+
+  /* ── Z-Index ──────────────────────────────────── */
+  --z-base:    0;
+  --z-raised:  10;
+  --z-overlay: 100;
+  --z-nav:     200;
+  --z-modal:   300;
+  --z-cursor:  9999;
+  --z-intro:   10000;
+
+  /* ── Premium Glass ──────────────────────────── */
+  --glass-bg:     rgba(8, 8, 16, 0.82);
+  --glass-border: rgba(255, 255, 255, 0.07);
+  --glass-blur:   blur(28px) saturate(1.7);
+
+  /* ── Shadow System ────────────────────────── */
+  --shadow-sm:   0 1px 8px rgba(0,0,0,0.55);
+  --shadow-md:   0 4px 28px rgba(0,0,0,0.65);
+  --shadow-lg:   0 8px 56px rgba(0,0,0,0.75);
+  --shadow-glow: 0 0 48px rgba(200,242,62,0.12);
+  --shadow-glow-strong: 0 0 72px rgba(200,242,62,0.20);
+
+  /* ── Card ───────────────────────────────────── */
+  --card-bg: rgba(14, 14, 24, 0.9);
+  --card-border: rgba(255, 255, 255, 0.08);
+  --card-radius: 18px;
+}
+
+/* ── MODE OVERRIDES ─────────────────────────────── */
+[data-mode="focus"] {
+  --mode-bg:      var(--color-deep);
+  --mode-text:    var(--color-text-primary);
+  --mode-accent:  var(--color-accent);
+  --mode-surface: var(--color-surface);
+  --mode-density: 1;
+}
+
+[data-mode="system"] {
+  --mode-bg:      #040812;
+  --mode-text:    #A8BCDC;
+  --mode-accent:  #5A8AFF;
+  --mode-surface: #070C1A;
+  --mode-density: 1.4;
+}
+
+[data-mode="play"] {
+  --mode-bg:      #070500;
+  --mode-text:    #F0EBDC;
+  --mode-accent:  #C8F23E;
+  --mode-surface: #0F0B00;
+  --mode-density: 1.8;
+}
+
+[data-mode="cinema"] {
+  --mode-bg:      #020202;
+  --mode-text:    #E8E4D6;
+  --mode-accent:  #8AC83E;
+  --mode-surface: #040404;
+  --mode-density: 0.6;
+}

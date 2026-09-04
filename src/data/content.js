@@ -1,0 +1,251 @@
+/* ============================================
+   CONTENT DATA — All portfolio content in one place
+   Mark [CONTENT NEEDED] for missing info
+   ============================================ */
+
+export const PERSONAL = {
+  name: {
+    first: 'Mridul',
+    last: 'Upadhya',
+    full: 'Mridul Upadhya',
+  },
+  title: 'Product Manager',
+  company: 'Jio Platforms',
+  tagline: 'I turn messy problems into products people actually use.',
+  bio: [
+    { label: 'PRODUCT', text: 'Obsessed with understanding why users behave the way they do.' },
+    { label: 'BUILD', text: 'Turns ambiguity and chaos into structured, shippable systems.' },
+    { label: 'LEARN', text: 'Experiments constantly. Fails fast. Iterates faster.' },
+    { label: 'OUTSIDE PRODUCT', text: 'Music. Conversations. Curious about everything.' },
+  ],
+  contact: {
+    email: 'mridulupadhya861@gmail.com',
+    linkedin: 'https://linkedin.com/in/mridulupadhya02',
+    photo: null, // Place profile photo at public/profile.jpg
+  },
+};
+
+export const PROJECTS = [
+  {
+    id: 'aras',
+    index: '01',
+    title: 'ARAS / BOND 360',
+    subtitle: 'Automated Retest Assignment System',
+    company: 'Jio Platforms',
+    year: '2024',
+    tags: ['Automation', 'B2B', 'Workflow', 'QA'],
+    problem: 'Retest assignment was entirely dependent on manual coordination — creating delays, errors, and invisible bottlenecks in the QA cycle.',
+    insight: 'After 40+ user interviews, the real pain wasn\'t the time taken — it was the cognitive load of tracking tester availability in real time. Every PM & lead had a different mental model of who was free.',
+    decision: 'Build an intelligent assignment engine that removes human judgment from a decision that should be algorithmic: detect RFR status → check real-time availability → select optimal tester → assign → notify.',
+    solution: 'ARAS — an automated retest assignment system embedded in BOND 360 that handles the entire retest workflow from RFR detection to assignment confirmation and logging.',
+    impact: [
+      { value: '196+', label: 'Regression Cases Managed', description: 'Across all projects post-launch' },
+      { value: '40+', label: 'Users Interviewed', description: 'Deep discovery sessions with QA leads, PMs, and testers' },
+      { value: '20–30%', label: 'Retest TAT Improvement', description: 'Reduction in time-to-assign after RFR' },
+      { value: '0%', label: 'Mis-assignments', description: 'Assignment to unavailable testers after ARAS launch' },
+    ],
+    tradeoffs: 'We chose rule-based assignment over ML-based scheduling to ship faster and reduce the trust-building burden with users who were skeptical of "black box" decisions.',
+    retrospective: '[CONTENT NEEDED — what you\'d do differently]',
+    isInteractive: true, // Powers the ARAS simulator
+    color: '#1A2A3A',
+    accentColor: '#4A90A0',
+    type: 'caseStudy',
+  },
+  {
+    id: 'namo',
+    index: '02',
+    title: 'NaMo App Revamp',
+    subtitle: 'Citizen Engagement Platform Redesign',
+    company: 'Jio Platforms',
+    year: '2023',
+    tags: ['Consumer', 'Mobile', 'Engagement', 'Scale'],
+    problem: '[CONTENT NEEDED — specific problem statement]',
+    insight: '[CONTENT NEEDED — key discovery from research]',
+    decision: '[CONTENT NEEDED — strategic decision made]',
+    solution: '[CONTENT NEEDED — what was built/changed]',
+    impact: [
+      { value: '[?]', label: 'Users Impacted', description: '[CONTENT NEEDED]' },
+      { value: '[?]', label: 'Engagement Metric', description: '[CONTENT NEEDED]' },
+    ],
+    tradeoffs: '[CONTENT NEEDED]',
+    retrospective: '[CONTENT NEEDED]',
+    isInteractive: false,
+    color: '#1A1A2A',
+    accentColor: '#7A70D0',
+    type: 'caseStudy',
+  },
+  {
+    id: 'dam',
+    index: '03',
+    title: 'Digital Asset Management',
+    subtitle: 'Enterprise Asset Infrastructure',
+    company: 'Jio Platforms',
+    year: '2023',
+    tags: ['Enterprise', 'Infrastructure', 'B2B', 'Scale'],
+    problem: '[CONTENT NEEDED — the core problem]',
+    insight: '[CONTENT NEEDED — discovery insight]',
+    decision: '[CONTENT NEEDED — product decision]',
+    solution: '[CONTENT NEEDED — solution shipped]',
+    impact: [
+      { value: '[?]', label: 'Assets Managed', description: '[CONTENT NEEDED]' },
+      { value: '[?]', label: 'Teams Enabled', description: '[CONTENT NEEDED]' },
+    ],
+    tradeoffs: '[CONTENT NEEDED]',
+    retrospective: '[CONTENT NEEDED]',
+    isInteractive: false,
+    color: '#1E1A12',
+    accentColor: '#C0903A',
+    type: 'caseStudy',
+  },
+];
+
+/* Side-projects / shipped work shown as cards */
+export const SIDE_PROJECTS = [
+  {
+    id: 'proj-1',
+    title: 'BOND 360 Dashboard',
+    category: 'Internal Tool',
+    year: '2024',
+    description: 'A unified QA command-center giving leads real-time visibility into retest queues, tester capacity, and cycle health — replacing spreadsheet chaos.',
+    tags: ['Dashboard', 'B2B', 'QA'],
+    accentColor: '#4A90A0',
+    metric: { value: '196+', label: 'Cases tracked' },
+    link: null,
+  },
+  {
+    id: 'proj-2',
+    title: 'NaMo App Revamp',
+    category: 'Consumer Mobile',
+    year: '2023',
+    description: 'End-to-end redesign of the citizen engagement platform — streamlining navigation, boosting content discoverability and reducing drop-off in key flows.',
+    tags: ['Mobile', 'Consumer', 'Engagement'],
+    accentColor: '#7A70D0',
+    metric: { value: '100K+', label: 'Users reached' },
+    link: null,
+  },
+  {
+    id: 'proj-3',
+    title: 'Digital Asset Management',
+    category: 'Enterprise Infrastructure',
+    year: '2023',
+    description: 'Built the asset ingestion, tagging, and distribution pipeline from scratch — enabling cross-team creative collaboration at scale across Jio properties.',
+    tags: ['Enterprise', 'B2B', 'Infrastructure'],
+    accentColor: '#C0903A',
+    metric: { value: '35+', label: 'Features shipped' },
+    link: null,
+  },
+];
+
+export const PM_CAPABILITIES = [
+  'Product Discovery',
+  'Product Strategy',
+  'PRD Writing',
+  'Roadmap Planning',
+  'User Research',
+  'Customer Feedback Analysis',
+  'Feature Prioritization',
+  'UAT Coordination',
+  'Data-Driven Decision Making',
+  'Stakeholder Management',
+  'Product Documentation',
+];
+
+export const THINK_NODES = [
+  {
+    id: 'why',
+    label: 'WHY?',
+    question: 'Why is this really happening?',
+    answer: 'I start by questioning the problem itself. "Users abandoning" is a symptom — not a problem. I ask 5 whys before touching solutions. In 80% of cases, the stated problem is not the real problem.',
+    framework: 'DISCOVER',
+  },
+  {
+    id: 'who',
+    label: 'WHO?',
+    question: 'Who exactly is experiencing this?',
+    answer: 'Not all users are equal. I segment: Who is abandoning? New users or returning? Power users or casual? The answer changes everything. I map user journeys for each segment.',
+    framework: 'DEFINE',
+  },
+  {
+    id: 'data',
+    label: 'DATA?',
+    question: 'What does the data actually say?',
+    answer: 'I look for the drop-off point in the funnel, session recordings, support tickets, and NPS comments. Qualitative tells you what. Quantitative tells you how much. You need both.',
+    framework: 'DEFINE',
+  },
+  {
+    id: 'what',
+    label: 'WHAT?',
+    question: 'What options do we have?',
+    answer: 'I generate at least 5 potential solutions — including the extreme ones. Constraints often eliminate the best ideas too early. I force myself to think beyond the obvious before pruning.',
+    framework: 'PRIORITIZE',
+  },
+  {
+    id: 'tradeoff',
+    label: 'TRADE-OFF?',
+    question: 'What are we giving up?',
+    answer: 'Every decision has a cost. I map effort vs. impact explicitly. I ask: what happens if we don\'t do this? I present trade-offs to stakeholders — not just recommendations.',
+    framework: 'PRIORITIZE',
+  },
+  {
+    id: 'decision',
+    label: 'DECISION?',
+    question: 'What are we committing to, and why?',
+    answer: 'I document the decision: what we\'re doing, what we\'re NOT doing, and why. This prevents decision drift. If the context changes, we revisit — but we have a record.',
+    framework: 'BUILD',
+  },
+  {
+    id: 'measure',
+    label: 'MEASURE?',
+    question: 'How will we know if we\'re right?',
+    answer: 'I define success metrics before building — not after. Leading indicators (engagement, activation) and lagging indicators (retention, revenue). Without a hypothesis, you can\'t learn.',
+    framework: 'MEASURE',
+  },
+];
+
+export const TIMELINE_STAGES = [
+  {
+    stage: '01',
+    title: 'DISCOVER',
+    period: 'Early Career',
+    company: 'Jio Platforms',
+    role: 'Associate Product Manager',
+    description: 'Deep product discovery work. 40+ user interviews. Learning to separate symptoms from root causes. Building the research muscle.',
+    outcome: 'Defined the problem space for ARAS — which no one had articulated clearly before.',
+  },
+  {
+    stage: '02',
+    title: 'BUILD',
+    period: '[CONTENT NEEDED]',
+    company: 'Jio Platforms',
+    role: 'Product Manager',
+    description: 'Translating discovery insights into PRDs, specs, and working software. Navigating engineering trade-offs. Shipping under ambiguity.',
+    outcome: 'Shipped ARAS, NaMo App Revamp, and Digital Asset Management.',
+  },
+  {
+    stage: '03',
+    title: 'SHIP',
+    period: '2023–2024',
+    company: 'Jio Platforms',
+    role: 'Product Manager',
+    description: 'UAT coordination. Launch readiness. Stakeholder communication. The 10 things that go wrong in the last week.',
+    outcome: '3 major products shipped. 196+ regression cases managed through ARAS.',
+  },
+  {
+    stage: '04',
+    title: 'LEARN',
+    period: 'Ongoing',
+    company: 'Jio Platforms',
+    role: 'Product Manager',
+    description: 'Post-launch measurement. Identifying what worked and what didn\'t. Intellectual honesty about mistakes. Iterating based on real usage.',
+    outcome: 'ARAS reduced mis-assignments to 0% post-launch. Continuous improvement cycle established.',
+  },
+  {
+    stage: '05',
+    title: 'SCALE',
+    period: '[CONTENT NEEDED]',
+    company: '[CONTENT NEEDED]',
+    role: '[CONTENT NEEDED]',
+    description: 'Taking what works and making it bigger, more reliable, more impactful.',
+    outcome: '[CONTENT NEEDED]',
+  },
+];
