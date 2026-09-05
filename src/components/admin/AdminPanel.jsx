@@ -1777,11 +1777,22 @@ function ProjectsTab({ data, updateSection, showToast }) {
    TAB: CASE STUDIES (03-B)
 ───────────────────────────────────────────────────────────── */
 function CaseStudiesTab({ data, updateSection, showToast }) {
-  const [list, setList] = useState(data || []);
+  const getSafeList = (d) => {
+    if (Array.isArray(d) && d.length > 0) return d;
+    if (typeof d === 'string') {
+      try {
+        const parsed = JSON.parse(d);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      } catch {}
+    }
+    return DEFAULT_PORTFOLIO_DATA.caseStudies || [];
+  };
+
+  const [list, setList] = useState(() => getSafeList(data));
   const [previewPdf, setPreviewPdf] = useState(null);
 
   useEffect(() => {
-    setList(data || []);
+    setList(getSafeList(data));
   }, [data]);
 
   const handleUpdate = (index, key, val) => {
@@ -1797,11 +1808,57 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
 
   const handleImpactUpdate = (studyIndex, impactIndex, field, val) => {
     const next = [...list];
-    const impacts = [...next[studyIndex].impact];
+    const impacts = [...(next[studyIndex].impact || [])];
     impacts[impactIndex] = { ...impacts[impactIndex], [field]: val };
     next[studyIndex] = { ...next[studyIndex], impact: impacts };
     setList(next);
     updateSection('caseStudies', next);
+  };
+
+  const handleAdd = () => {
+    const newIdx = list.length + 1;
+    const newCase = {
+      id: `cs-${Date.now()}`,
+      index: newIdx < 10 ? `0${newIdx}` : `${newIdx}`,
+      title: 'New Case Study Title',
+      subtitle: 'Product Strategy & Architecture Deep Dive',
+      company: 'Jio Platforms',
+      year: new Date().getFullYear().toString(),
+      tags: ['Strategy', 'Product', 'B2B'],
+      problem: 'Detailed explanation of the problem space and user friction.',
+      solution: 'Architectural solution shipped and system decisions.',
+      impact: [
+        { value: '100+', label: 'Cases Managed' },
+        { value: '30%', label: 'Efficiency Gain' },
+      ],
+      color: '#1A2A3A',
+      accentColor: '#4A90A0',
+      type: 'caseStudy',
+      link: null,
+      pdfUrl: null,
+    };
+    const next = [...list, newCase];
+    setList(next);
+    updateSection('caseStudies', next);
+    showToast('New case study created!');
+  };
+
+  const handleDelete = (index) => {
+    if (window.confirm(`Delete case study "${list[index].title}"?`)) {
+      const next = list.filter((_, i) => i !== index);
+      setList(next);
+      updateSection('caseStudies', next);
+      showToast('Case study deleted.');
+    }
+  };
+
+  const handleRestoreDefaults = () => {
+    if (window.confirm('Restore all 3 original default Case Studies (ARAS, NaMo App, Digital Asset Management)?')) {
+      const defs = DEFAULT_PORTFOLIO_DATA.caseStudies;
+      setList(defs);
+      updateSection('caseStudies', defs);
+      showToast('Default case studies restored!');
+    }
   };
 
   const handlePdfUpload = (index, file) => {
@@ -1856,8 +1913,52 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
   return (
     <SectionWrapper
       title="Deep Dive Case Studies (03-B)"
-      desc="Configure detailed case study records, problem statements, and impact metrics."
+      desc="Configure detailed case study records, problem statements, impact metrics, and PDF attachments."
     >
+      {/* Top Action Controls */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '10px' }}>
+        <div style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '11px', color: '#C8F23E' }}>
+          Total Active Case Studies: {list.length}
+        </div>
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <button
+            type="button"
+            onClick={handleAdd}
+            style={{
+              background: 'rgba(200, 242, 62, 0.12)',
+              border: '1px solid rgba(200, 242, 62, 0.35)',
+              color: '#C8F23E',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+            }}
+          >
+            <span>+</span> Add Case Study
+          </button>
+          <button
+            type="button"
+            onClick={handleRestoreDefaults}
+            style={{
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              color: '#CCC',
+              borderRadius: '8px',
+              padding: '8px 14px',
+              fontSize: '12px',
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+          >
+            ↺ Restore Defaults
+          </button>
+        </div>
+      </div>
+
       <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
         {list.map((study, i) => (
           <div
@@ -1881,6 +1982,20 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
                 </span>
                 <span style={{ fontSize: '18px', fontWeight: 800 }}>{study.title}</span>
               </div>
+              <button
+                type="button"
+                onClick={() => handleDelete(i)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#FF6666',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                  padding: '4px 8px',
+                }}
+              >
+                Delete
+              </button>
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '2fr 2fr 1fr', gap: '12px', marginBottom: '14px' }}>

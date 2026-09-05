@@ -192,8 +192,25 @@ export function PortfolioDataProvider({ children }) {
       if (rows && rows.length > 0) {
         const merged = { ...DEFAULT_PORTFOLIO_DATA };
         rows.forEach(({ id, content }) => {
-          if (content && typeof content === 'object') {
-            merged[id] = content;
+          let parsed = content;
+          if (typeof content === 'string') {
+            try {
+              parsed = JSON.parse(content);
+            } catch {
+              parsed = content;
+            }
+          }
+
+          if (id === 'caseStudies') {
+            merged.caseStudies = Array.isArray(parsed) && parsed.length > 0
+              ? parsed
+              : DEFAULT_PORTFOLIO_DATA.caseStudies;
+          } else if (id === 'projects') {
+            merged.projects = Array.isArray(parsed) && parsed.length > 0
+              ? parsed
+              : DEFAULT_PORTFOLIO_DATA.projects;
+          } else if (parsed && typeof parsed === 'object') {
+            merged[id] = parsed;
           }
         });
         setData(merged);
@@ -232,9 +249,19 @@ export function PortfolioDataProvider({ children }) {
         { event: '*', schema: 'public', table: 'portfolio_sections' },
         (payload) => {
           if (payload.new && payload.new.id) {
+            let nextVal = payload.new.content;
+            if (typeof nextVal === 'string') {
+              try { nextVal = JSON.parse(nextVal); } catch {}
+            }
+            if (payload.new.id === 'caseStudies' && (!Array.isArray(nextVal) || nextVal.length === 0)) {
+              nextVal = DEFAULT_PORTFOLIO_DATA.caseStudies;
+            } else if (payload.new.id === 'projects' && (!Array.isArray(nextVal) || nextVal.length === 0)) {
+              nextVal = DEFAULT_PORTFOLIO_DATA.projects;
+            }
+
             setData((prev) => ({
               ...prev,
-              [payload.new.id]: payload.new.content,
+              [payload.new.id]: nextVal,
             }));
             setLastSyncedAt(new Date());
             setSyncStatus('synced');

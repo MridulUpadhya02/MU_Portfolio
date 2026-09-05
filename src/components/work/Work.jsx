@@ -778,8 +778,12 @@ export default function Work({ onProjectOpen, setCursor, resetCursor }) {
   const inView = useInView(sectionRef, { once: true, margin: '-8%' });
   const { data } = usePortfolioData();
   const [previewPdf, setPreviewPdf] = useState(null);
-  const sideProjects = data?.projects || SIDE_PROJECTS;
-  const caseStudies = data?.caseStudies || PROJECTS;
+  const sideProjects = Array.isArray(data?.projects) && data.projects.length > 0
+    ? data.projects
+    : SIDE_PROJECTS;
+  const caseStudies = Array.isArray(data?.caseStudies) && data.caseStudies.length > 0
+    ? data.caseStudies
+    : PROJECTS;
 
   return (
     <section
@@ -803,12 +807,12 @@ export default function Work({ onProjectOpen, setCursor, resetCursor }) {
       }} aria-hidden="true" />
 
       {/* ── Section header ── */}
-      <div style={{ padding: 'clamp(40px, 6vh, 80px) clamp(20px, 6vw, 96px) clamp(28px, 4vh, 48px)' }}>
+      <div style={{ padding: 'clamp(40px, 6vh, 80px) clamp(20px, 6vw, 96px) clamp(24px, 3.5vh, 40px)' }}>
         <motion.span
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ duration: 0.6 }}
           style={{ display: 'block', fontFamily: "'JetBrains Mono', monospace", fontSize: 10, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(200,210,185,0.35)', marginBottom: 14 }}
         >
-          03 / WORK
+          03 / WORK & CASE STUDIES
         </motion.span>
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: 16 }}>
@@ -823,13 +827,63 @@ export default function Work({ onProjectOpen, setCursor, resetCursor }) {
             initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.2, duration: 0.6 }}
             style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(13px, 1.2vw, 15px)', color: 'rgba(200,210,185,0.45)', maxWidth: 360, lineHeight: 1.7, margin: 0, textAlign: 'right' }}
           >
-            A mix of shipped products and deep-dives into the thinking behind them.
+            A mix of shipped products and deep-dive analyses into the thinking behind them.
           </motion.p>
         </div>
+
+        {/* Quick jump pills */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={inView ? { opacity: 1, y: 0 } : {}}
+          transition={{ delay: 0.25, duration: 0.5 }}
+          style={{ display: 'flex', gap: 10, marginTop: 24, flexWrap: 'wrap' }}
+        >
+          <a
+            href="#projects"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: 'var(--color-text-primary)',
+              background: 'rgba(255,255,255,0.04)',
+              border: '1px solid rgba(255,255,255,0.12)',
+              borderRadius: 8,
+              padding: '6px 14px',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+            }}
+          >
+            <span>💼</span> 03-A / Shipped Projects ({sideProjects.length})
+          </a>
+          <a
+            href="#case-studies"
+            style={{
+              fontFamily: "'JetBrains Mono', monospace",
+              fontSize: 11,
+              letterSpacing: '0.08em',
+              textTransform: 'uppercase',
+              color: '#C8F23E',
+              background: 'rgba(200,242,62,0.08)',
+              border: '1px solid rgba(200,242,62,0.28)',
+              borderRadius: 8,
+              padding: '6px 14px',
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontWeight: 700,
+            }}
+          >
+            <span>📖</span> 03-B / Deep Dive Case Studies ({caseStudies.length})
+          </a>
+        </motion.div>
       </div>
 
       {/* ══ PROJECTS ══ */}
-      <div style={{ padding: '0 clamp(20px, 6vw, 96px) clamp(40px, 6vh, 64px)' }}>
+      <div id="projects" style={{ padding: '0 clamp(20px, 6vw, 96px) clamp(40px, 6vh, 64px)' }}>
         <motion.div
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.25 }}
           style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 'clamp(16px, 2.5vh, 28px)' }}
@@ -851,16 +905,16 @@ export default function Work({ onProjectOpen, setCursor, resetCursor }) {
       </div>
 
       {/* ══ CASE STUDIES ══ */}
-      <div style={{ padding: '0 clamp(20px, 6vw, 96px) clamp(48px, 7vh, 80px)' }}>
+      <div id="case-studies" style={{ padding: '0 clamp(20px, 6vw, 96px) clamp(48px, 7vh, 80px)' }}>
         <motion.div
           initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : {}} transition={{ delay: 0.1 }}
           style={{ display: 'flex', alignItems: 'center', gap: 16, marginBottom: 'clamp(16px, 2.5vh, 28px)' }}
         >
-          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '0.28em', textTransform: 'uppercase', color: 'rgba(200,210,185,0.35)' }}>
+          <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 9, letterSpacing: '0.28em', textTransform: 'uppercase', color: '#C8F23E' }}>
             03-B / CASE STUDIES
           </span>
-          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(255,255,255,0.07), transparent)' }} />
-          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(200,210,185,0.25)', fontStyle: 'italic' }}>
+          <div style={{ flex: 1, height: 1, background: 'linear-gradient(90deg, rgba(200,242,62,0.2), transparent)' }} />
+          <span style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 12, color: 'rgba(200,242,62,0.6)', fontStyle: 'italic', fontWeight: 600 }}>
             {caseStudies.length} deep dives
           </span>
         </motion.div>

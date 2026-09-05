@@ -162,12 +162,13 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
 }
 
 const NAV_SECTIONS = [
-  { id: 'hero',    label: 'INTRO',   index: '01', x: 25, y: 35 },
-  { id: 'think',   label: 'THINK',   index: '02', x: 65, y: 28 },
-  { id: 'work',    label: 'WORK',    index: '03', x: 80, y: 52 },
-  { id: 'impact',  label: 'IMPACT',  index: '04', x: 60, y: 70 },
-  { id: 'about',   label: 'ABOUT',   index: '05', x: 30, y: 72 },
-  { id: 'contact', label: 'CONTACT', index: '06', x: 18, y: 55 },
+  { id: 'hero',         label: 'INTRO',        index: '01',   x: 25, y: 35 },
+  { id: 'think',        label: 'THINK',        index: '02',   x: 65, y: 28 },
+  { id: 'projects',     label: 'PROJECTS',     index: '03-A', x: 78, y: 48 },
+  { id: 'case-studies', label: 'CASE STUDIES', index: '03-B', x: 82, y: 56 },
+  { id: 'impact',       label: 'IMPACT',       index: '04',   x: 60, y: 70 },
+  { id: 'about',        label: 'ABOUT',        index: '05',   x: 30, y: 72 },
+  { id: 'contact',      label: 'CONTACT',      index: '06',   x: 18, y: 55 },
 ];
 
 const MODES_CONFIG = [
@@ -270,7 +271,7 @@ function TopBar({
         }}
         role="list"
       >
-        {NAV_SECTIONS.slice(0, 5).map((s) => (
+        {NAV_SECTIONS.slice(0, 6).map((s) => (
           <motion.button
             key={s.id}
             role="listitem"
