@@ -1,291 +1,333 @@
-import { useEffect, useRef, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const SEQUENCE = [
-  { text: 'INITIALIZING SYSTEM —', delay: 0 },
-  { text: 'MAPPING VISITOR CONTEXT', delay: 700 },
-  { text: 'LOADING DECISION FRAMEWORK', delay: 1500 },
-  { text: 'SYSTEM READY', delay: 2200 },
-];
-
-const TOTAL_DURATION = 3200;
+const TOTAL_DISPLAY_MS = 1600;
 
 export default function IntroSequence({ onComplete }) {
-  const canvasRef = useRef(null);
-  const [phase, setPhase] = useState('text');
-  const [activeLines, setActiveLines] = useState([]);
-  const [showSkip, setShowSkip] = useState(false);
   const [exiting, setExiting] = useState(false);
-  const animFrameRef = useRef(null);
-  const startTimeRef = useRef(null);
   const [progress, setProgress] = useState(0);
+  const completedRef = useRef(false);
 
-  const triggerComplete = useCallback(() => {
+  // Automatically transition to the actual website
+  const handleTransition = useCallback(() => {
+    if (completedRef.current) return;
+    completedRef.current = true;
     setExiting(true);
-    sessionStorage.setItem('intro-seen', 'true');
-    setTimeout(onComplete, 900);
+    // Smooth dissolve into the actual website (total time = 1600ms + 400ms = 2.0s)
+    setTimeout(() => {
+      onComplete?.();
+    }, 400);
   }, [onComplete]);
 
+  // Keyboard shortcut to skip if desired
   useEffect(() => {
-    if (sessionStorage.getItem('intro-seen') === 'true') {
-      onComplete();
-      return;
-    }
-
-    const skipTimer = setTimeout(() => setShowSkip(true), 1400);
-
-    SEQUENCE.forEach((item) => {
-      setTimeout(() => {
-        setActiveLines(prev => [...prev, item.text]);
-      }, item.delay);
-    });
-
-    let elapsed = 0;
-    const progressInterval = setInterval(() => {
-      elapsed += 50;
-      setProgress(Math.min(elapsed / TOTAL_DURATION, 1));
-    }, 50);
-
-    const networkTimer = setTimeout(() => setPhase('network'), TOTAL_DURATION);
-    const completeTimer = setTimeout(() => triggerComplete(), TOTAL_DURATION + 1900);
-
-    return () => {
-      clearTimeout(skipTimer);
-      clearTimeout(networkTimer);
-      clearTimeout(completeTimer);
-      clearInterval(progressInterval);
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        handleTransition();
+      }
     };
-  }, [onComplete, triggerComplete]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleTransition]);
 
+  // Automated timer: runs for ~2.25 seconds then smoothly transitions
   useEffect(() => {
-    if (phase !== 'network') return;
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    const startTime = performance.now();
+    const interval = setInterval(() => {
+      const elapsed = performance.now() - startTime;
+      const p = Math.min(elapsed / TOTAL_DISPLAY_MS, 1);
+      setProgress(p);
 
-    const cx = canvas.width / 2;
-    const cy = canvas.height / 2;
-
-    const nodeCount = 80;
-    const nodes = Array.from({ length: nodeCount }, () => ({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      tx: cx + (Math.random() - 0.5) * Math.min(canvas.width * 0.45, 460),
-      ty: cy + (Math.random() - 0.5) * Math.min(canvas.height * 0.38, 220),
-      r: Math.random() * 1.4 + 0.3,
-      opacity: Math.random() * 0.45 + 0.15,
-    }));
-
-    startTimeRef.current = performance.now();
-    const duration = 1900;
-    const easeOutCubic = (t) => 1 - Math.pow(1 - t, 3);
-
-    const draw = (timestamp) => {
-      const elapsed = timestamp - startTimeRef.current;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = easeOutCubic(progress);
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw connections
-      for (let i = 0; i < nodes.length; i++) {
-        for (let j = i + 1; j < nodes.length; j++) {
-          const dx = nodes[i].x - nodes[j].x;
-          const dy = nodes[i].y - nodes[j].y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 100) {
-            const alpha = (1 - dist / 100) * 0.09 * eased;
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(200,242,62,${alpha})`;
-            ctx.lineWidth = 0.35;
-            ctx.moveTo(nodes[i].x, nodes[i].y);
-            ctx.lineTo(nodes[j].x, nodes[j].y);
-            ctx.stroke();
-          }
-        }
+      if (p >= 1) {
+        clearInterval(interval);
+        handleTransition();
       }
+    }, 20);
 
-      nodes.forEach(node => {
-        node.x += (node.tx - node.x) * 0.024;
-        node.y += (node.ty - node.y) * 0.024;
-
-        ctx.beginPath();
-        ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(200,242,62,${node.opacity * eased})`;
-        ctx.fill();
-      });
-
-      // Name reveal
-      if (progress > 0.5) {
-        const textAlpha = (progress - 0.5) / 0.5;
-        const fontSize = Math.min(canvas.width * 0.088, 104);
-        ctx.font = `700 ${fontSize}px 'Plus Jakarta Sans', sans-serif`;
-        ctx.fillStyle = `rgba(242,242,242,${textAlpha * 0.92})`;
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('MRIDUL UPADHYA', cx, cy);
-
-        if (textAlpha > 0.55) {
-          const subAlpha = (textAlpha - 0.55) / 0.45;
-          const subSize = Math.max(9, Math.min(canvas.width * 0.024, 12));
-          ctx.font = `400 ${subSize}px 'JetBrains Mono', monospace`;
-          ctx.fillStyle = `rgba(200,242,62,${subAlpha * 0.65})`;
-          ctx.fillText('PRODUCT MANAGER', cx, cy + fontSize * 0.72);
-        }
-      }
-
-      if (progress < 1) {
-        animFrameRef.current = requestAnimationFrame(draw);
-      }
-    };
-
-    animFrameRef.current = requestAnimationFrame(draw);
-    return () => {
-      if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
-    };
-  }, [phase]);
+    return () => clearInterval(interval);
+  }, [handleTransition]);
 
   return (
     <AnimatePresence>
       {!exiting && (
         <motion.div
-          key="intro"
+          key="subtle-intro"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.95, ease: [0.65, 0, 0.35, 1] }}
+          exit={{ opacity: 0, y: -16, filter: 'blur(5px)' }}
+          transition={{ duration: 0.4, ease: [0.65, 0, 0.35, 1] }}
+          onClick={handleTransition}
           style={{
             position: 'fixed',
             inset: 0,
-            background: '#010102',
             zIndex: 10000,
+            background: '#070709',
             display: 'flex',
             flexDirection: 'column',
-            alignItems: 'flex-start',
-            justifyContent: 'flex-end',
-            padding: 'clamp(40px, 6vw, 104px)',
+            alignItems: 'center',
+            justifyContent: 'center',
             overflow: 'hidden',
+            cursor: 'default',
+            userSelect: 'none',
           }}
         >
-          {/* Canvas network */}
-          <canvas
-            ref={canvasRef}
+          {/* Subtle warm ambient glow in center */}
+          <div
             style={{
               position: 'absolute',
-              inset: 0,
-              opacity: phase === 'network' ? 1 : 0,
-              transition: 'opacity 800ms ease',
+              width: 'min(640px, 85vw)',
+              height: 'min(640px, 85vw)',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(200, 242, 62, 0.04) 0%, rgba(255, 255, 255, 0.015) 35%, transparent 70%)',
+              filter: 'blur(50px)',
+              pointerEvents: 'none',
             }}
           />
 
-          {/* Grain overlay */}
+          {/* Minimalist fine grain texture */}
           <div
             style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.72' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
+              backgroundImage: "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E\")",
               opacity: 0.018,
               pointerEvents: 'none',
             }}
             aria-hidden="true"
           />
 
-          {/* Text sequence */}
-          {phase === 'text' && (
-            <div style={{ position: 'relative', zIndex: 2, paddingBottom: '40px' }}>
-              {activeLines.map((line, i) => (
-                <motion.div
-                  key={`line-${i}`}
-                  initial={{ opacity: 0, x: -12 }}
-                  animate={{ opacity: i === activeLines.length - 1 ? 1 : 0.18, x: 0 }}
-                  transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                  style={{
-                    fontFamily: "'JetBrains Mono', monospace",
-                    fontSize: 'clamp(8px, 1vw, 11px)',
-                    letterSpacing: '0.26em',
-                    color: i === activeLines.length - 1 ? '#C8F23E' : '#24243A',
-                    marginBottom: '10px',
-                    textTransform: 'uppercase',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '12px',
-                  }}
-                >
-                  <span style={{ fontSize: '0.65em', opacity: 0.7 }}>
-                    {i < activeLines.length - 1 ? '✓' : '→'}
-                  </span>
-                  {line}
-                </motion.div>
-              ))}
-            </div>
-          )}
-
-          {/* Progress bar */}
-          <div style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            height: '1px',
-            background: 'linear-gradient(90deg, rgba(200,242,62,0.3), rgba(200,242,62,0.9))',
-            width: `${(phase === 'network' ? 1 : progress) * 100}%`,
-            transition: 'width 50ms linear',
-            boxShadow: '0 0 10px rgba(200,242,62,0.35)',
-          }} />
-
-          {/* Skip button */}
-          {showSkip && (
+          {/* ── TOP-RIGHT: BEAUTIFUL INTERACTIVE SKIP ICON BUTTON ── */}
+          <div
+            style={{
+              position: 'absolute',
+              top: 'clamp(20px, 3.5vw, 40px)',
+              right: 'clamp(20px, 4vw, 48px)',
+              zIndex: 20,
+            }}
+          >
             <motion.button
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              onClick={triggerComplete}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.12 }}
+              whileHover={{
+                scale: 1.05,
+                borderColor: 'rgba(200, 242, 62, 0.6)',
+                color: '#C8F23E',
+                boxShadow: '0 0 20px rgba(200, 242, 62, 0.25)',
+              }}
+              whileTap={{ scale: 0.94 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleTransition();
+              }}
               aria-label="Skip introduction"
+              title="Skip intro (or press ESC)"
               style={{
-                position: 'absolute',
-                top: 'clamp(32px, 5vw, 60px)',
-                right: 'clamp(32px, 5vw, 60px)',
-                background: 'transparent',
-                border: '1px solid rgba(255,255,255,0.06)',
-                color: 'rgba(255,255,255,0.2)',
-                fontFamily: "'JetBrains Mono', monospace",
-                fontSize: '8px',
-                letterSpacing: '0.22em',
-                padding: '9px 20px',
                 cursor: 'pointer',
+                background: 'rgba(255, 255, 255, 0.035)',
+                backdropFilter: 'blur(12px)',
+                WebkitBackdropFilter: 'blur(12px)',
+                border: '1px solid rgba(255, 255, 255, 0.12)',
+                color: 'rgba(255, 255, 255, 0.7)',
+                padding: '6px 14px 6px 10px',
+                borderRadius: '24px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: '10px',
+                letterSpacing: '0.18em',
                 textTransform: 'uppercase',
-                transition: 'border-color 200ms ease, color 200ms ease',
-              }}
-              onMouseEnter={e => {
-                e.currentTarget.style.borderColor = 'rgba(200,242,62,0.4)';
-                e.currentTarget.style.color = '#C8F23E';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.borderColor = 'rgba(255,255,255,0.06)';
-                e.currentTarget.style.color = 'rgba(255,255,255,0.2)';
+                transition: 'border-color 0.2s, color 0.2s, background 0.2s, box-shadow 0.2s',
               }}
             >
-              SKIP →
-            </motion.button>
-          )}
+              {/* Circular progress countdown ring with fast-forward arrow */}
+              <div
+                style={{
+                  position: 'relative',
+                  width: 18,
+                  height: 18,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <svg width="18" height="18" viewBox="0 0 20 20" style={{ transform: 'rotate(-90deg)' }}>
+                  <circle cx="10" cy="10" r="8" stroke="rgba(255,255,255,0.12)" strokeWidth="2" fill="none" />
+                  <circle
+                    cx="10"
+                    cy="10"
+                    r="8"
+                    stroke="#C8F23E"
+                    strokeWidth="2"
+                    fill="none"
+                    strokeDasharray={2 * Math.PI * 8}
+                    strokeDashoffset={2 * Math.PI * 8 * (1 - progress)}
+                    strokeLinecap="round"
+                    style={{ transition: 'stroke-dashoffset 20ms linear' }}
+                  />
+                </svg>
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <svg
+                    width="7"
+                    height="7"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <polygon points="5 4 15 12 5 20 5 4" fill="currentColor" />
+                    <line x1="19" y1="5" x2="19" y2="19" />
+                  </svg>
+                </div>
+              </div>
 
-          {/* Corner identifier */}
-          <div style={{
-            position: 'absolute',
-            top: 'clamp(32px, 5vw, 60px)',
-            left: 'clamp(32px, 5vw, 104px)',
-            fontFamily: "'JetBrains Mono', monospace",
-            fontSize: '8px',
-            letterSpacing: '0.26em',
-            color: 'rgba(255,255,255,0.15)',
-            textTransform: 'uppercase',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '9px',
-          }}>
-            <span style={{ color: 'rgba(200,242,62,0.22)', fontSize: '9px' }}>◈</span>
-            MU / SYS.01
+              <span>SKIP</span>
+            </motion.button>
           </div>
+
+          {/* ── CENTERPIECE: SUBTLE & SOBER TYPOGRAPHY ── */}
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              padding: '0 24px',
+              maxWidth: '900px',
+            }}
+          >
+            {/* Elegant eyebrow */}
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.04, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                fontFamily: "'JetBrains Mono', monospace",
+                fontSize: 'clamp(9px, 1.1vw, 11px)',
+                letterSpacing: '0.28em',
+                color: 'rgba(255, 255, 255, 0.4)',
+                textTransform: 'uppercase',
+                marginBottom: '14px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+              }}
+            >
+              <span
+                style={{
+                  width: 5,
+                  height: 5,
+                  borderRadius: '50%',
+                  backgroundColor: '#C8F23E',
+                  boxShadow: '0 0 6px rgba(200, 242, 62, 0.8)',
+                  display: 'inline-block',
+                }}
+              />
+              <span>PORTFOLIO</span>
+            </motion.div>
+
+            {/* Main Name: Mridul Upadhya */}
+            <div style={{ overflow: 'hidden', padding: '6px 0' }}>
+              <motion.h1
+                initial={{ y: 36, opacity: 0, filter: 'blur(5px)' }}
+                animate={{ y: 0, opacity: 1, filter: 'blur(0px)' }}
+                transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: 'clamp(40px, 6.6vw, 84px)',
+                  fontWeight: 700,
+                  lineHeight: 1.08,
+                  letterSpacing: '-0.025em',
+                  color: '#FFFFFF',
+                  margin: 0,
+                  textShadow: '0 0 35px rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                Mridul Upadhya
+              </motion.h1>
+            </div>
+
+            {/* Subtitle & Role */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.45, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                marginTop: '16px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '12px',
+                flexWrap: 'wrap',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: "'JetBrains Mono', monospace",
+                  fontSize: 'clamp(11px, 1.3vw, 14px)',
+                  letterSpacing: '0.24em',
+                  color: '#C8F23E',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                }}
+              >
+                Product Manager
+              </span>
+              <span style={{ color: 'rgba(255, 255, 255, 0.2)', fontSize: '11px' }}>·</span>
+              <span
+                style={{
+                  fontFamily: "'Plus Jakarta Sans', sans-serif",
+                  fontSize: 'clamp(11px, 1.2vw, 13px)',
+                  letterSpacing: '0.04em',
+                  color: 'rgba(255, 255, 255, 0.65)',
+                  fontWeight: 400,
+                }}
+              >
+                Products are systems of decisions
+              </span>
+            </motion.div>
+
+            {/* Subtle elegant line */}
+            <motion.div
+              initial={{ scaleX: 0, opacity: 0 }}
+              animate={{ scaleX: 1, opacity: 1 }}
+              transition={{ duration: 0.55, delay: 0.38, ease: [0.16, 1, 0.3, 1] }}
+              style={{
+                width: '44px',
+                height: '1px',
+                background: 'rgba(200, 242, 62, 0.5)',
+                marginTop: '22px',
+                transformOrigin: 'center',
+              }}
+            />
+          </div>
+
+          {/* Minimal progress hairline at bottom edge */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              height: '2px',
+              background: 'linear-gradient(90deg, transparent 0%, #C8F23E 60%, rgba(200, 242, 62, 0.8) 100%)',
+              width: `${progress * 100}%`,
+              transition: 'width 20ms linear',
+              opacity: 0.7,
+            }}
+          />
         </motion.div>
       )}
     </AnimatePresence>

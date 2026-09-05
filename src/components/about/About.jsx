@@ -51,9 +51,9 @@ function DottedOrbitalSphere() {
             </feMerge>
           </filter>
           <linearGradient id="crescentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="#A2E024" stopOpacity="0.2" />
-            <stop offset="60%" stopColor="#A2E024" stopOpacity="0.85" />
-            <stop offset="100%" stopColor="#C8F23E" stopOpacity="1" />
+            <stop offset="0%" stopColor="var(--color-accent-soft)" stopOpacity="0.2" />
+            <stop offset="60%" stopColor="var(--color-accent-soft)" stopOpacity="0.85" />
+            <stop offset="100%" stopColor="var(--color-accent)" stopOpacity="1" />
           </linearGradient>
         </defs>
 
@@ -513,6 +513,8 @@ export default function About({ setCursor, resetCursor }) {
                   <img
                     src="/sapphire-cover.jpg"
                     alt="Sapphire - Ed Sheeran"
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -844,6 +846,8 @@ export default function About({ setCursor, resetCursor }) {
                   <img
                     src="/atomic-habits.jpg"
                     alt="Atomic Habits - James Clear"
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: '100%',
                       height: '100%',
@@ -1090,6 +1094,8 @@ export default function About({ setCursor, resetCursor }) {
                 <img
                   src="/marine-drive.jpg"
                   alt="Mumbai Marine Drive Queens Necklace Skyline"
+                  loading="lazy"
+                  decoding="async"
                   style={{
                     width: '100%',
                     height: '100%',

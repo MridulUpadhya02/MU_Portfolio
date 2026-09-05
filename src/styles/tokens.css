@@ -135,34 +135,187 @@
 }
 
 /* ── MODE OVERRIDES ─────────────────────────────── */
+
+/* 1. FOCUS (Executive Minimalist · Electric Volt Lime) */
+:root[data-mode="focus"],
 [data-mode="focus"] {
-  --mode-bg:      var(--color-deep);
-  --mode-text:    var(--color-text-primary);
-  --mode-accent:  var(--color-accent);
-  --mode-surface: var(--color-surface);
+  --color-void:          #040406;
+  --color-deep:          #080810;
+  --color-surface:       #0E0E18;
+  --color-surface-2:     #141420;
+  --color-surface-3:     rgba(18, 18, 28, 0.75);
+  --color-border:        rgba(255, 255, 255, 0.07);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-bright: rgba(255, 255, 255, 0.14);
+  --color-border-accent: rgba(200, 242, 62, 0.25);
+
+  --color-text-primary:   #F5F5F0;
+  --color-text-secondary: #7A7C8E;
+  --color-text-tertiary:  #32334A;
+  --color-text-disabled:  #1A1A2A;
+
+  --color-accent:        #C8F23E;
+  --color-accent-bright: #D6FF48;
+  --color-accent-soft:   #A8D230;
+  --color-accent-dim:    #6A8E14;
+  --color-accent-ghost:  rgba(200, 242, 62, 0.06);
+  --color-accent-glow:   rgba(200, 242, 62, 0.16);
+  --color-accent-subtle: rgba(200, 242, 62, 0.03);
+  --color-accent-border: rgba(200, 242, 62, 0.22);
+
+  --color-accent-2:       #9B7FFF;
+  --color-accent-2-ghost: rgba(155, 127, 255, 0.08);
+  --color-accent-3:       #FF8C69;
+  --color-accent-3-ghost: rgba(255, 140, 105, 0.07);
+
+  --card-bg:            rgba(14, 14, 24, 0.92);
+  --card-border:        rgba(255, 255, 255, 0.08);
+  --glass-bg:           rgba(8, 8, 16, 0.85);
+  --glass-border:       rgba(255, 255, 255, 0.07);
+  --shadow-glow:        0 0 48px rgba(200, 242, 62, 0.14);
+  --shadow-glow-strong: 0 0 72px rgba(200, 242, 62, 0.22);
+
+  --mode-bg:      #080810;
+  --mode-text:    #F5F5F0;
+  --mode-accent:  #C8F23E;
+  --mode-surface: #0E0E18;
   --mode-density: 1;
 }
 
+/* 2. SYSTEM (Cybernetic Blueprint · Deep Slate & Electric Cyan) */
+:root[data-mode="system"],
 [data-mode="system"] {
-  --mode-bg:      #040812;
-  --mode-text:    #A8BCDC;
-  --mode-accent:  #5A8AFF;
-  --mode-surface: #070C1A;
-  --mode-density: 1.4;
+  --color-void:          #02060F;
+  --color-deep:          #060D1E;
+  --color-surface:       #0A162F;
+  --color-surface-2:     #0F2044;
+  --color-surface-3:     rgba(10, 22, 47, 0.85);
+  --color-border:        rgba(0, 212, 255, 0.12);
+  --color-border-subtle: rgba(0, 212, 255, 0.05);
+  --color-border-bright: rgba(0, 212, 255, 0.28);
+  --color-border-accent: rgba(0, 212, 255, 0.40);
+
+  --color-text-primary:   #EAF2FF;
+  --color-text-secondary: #88A6D3;
+  --color-text-tertiary:  #38557E;
+  --color-text-disabled:  #142540;
+
+  --color-accent:        #00D4FF;
+  --color-accent-bright: #38BDF8;
+  --color-accent-soft:   #0284C7;
+  --color-accent-dim:    #0369A1;
+  --color-accent-ghost:  rgba(0, 212, 255, 0.08);
+  --color-accent-glow:   rgba(0, 212, 255, 0.24);
+  --color-accent-subtle: rgba(0, 212, 255, 0.04);
+  --color-accent-border: rgba(0, 212, 255, 0.35);
+
+  --color-accent-2:       #818CF8;
+  --color-accent-2-ghost: rgba(129, 140, 248, 0.08);
+  --color-accent-3:       #38BDF8;
+  --color-accent-3-ghost: rgba(56, 189, 248, 0.07);
+
+  --card-bg:            rgba(8, 18, 38, 0.92);
+  --card-border:        rgba(0, 212, 255, 0.16);
+  --glass-bg:           rgba(5, 12, 26, 0.88);
+  --glass-border:       rgba(0, 212, 255, 0.18);
+  --shadow-glow:        0 0 48px rgba(0, 212, 255, 0.22);
+  --shadow-glow-strong: 0 0 72px rgba(0, 212, 255, 0.34);
+
+  --mode-bg:      #02060F;
+  --mode-text:    #EAF2FF;
+  --mode-accent:  #00D4FF;
+  --mode-surface: #0A162F;
+  --mode-density: 1.25;
 }
 
+/* 3. PLAY (Vibrant Creator · Plum Nebula & Sunset Coral/Gold) */
+:root[data-mode="play"],
 [data-mode="play"] {
-  --mode-bg:      #070500;
-  --mode-text:    #F0EBDC;
-  --mode-accent:  #C8F23E;
-  --mode-surface: #0F0B00;
-  --mode-density: 1.8;
+  --color-void:          #0E0516;
+  --color-deep:          #160A24;
+  --color-surface:       #210F36;
+  --color-surface-2:     #2D1549;
+  --color-surface-3:     rgba(33, 15, 54, 0.85);
+  --color-border:        rgba(255, 94, 126, 0.12);
+  --color-border-subtle: rgba(255, 94, 126, 0.05);
+  --color-border-bright: rgba(255, 94, 126, 0.28);
+  --color-border-accent: rgba(255, 94, 126, 0.42);
+
+  --color-text-primary:   #FFF2F5;
+  --color-text-secondary: #C7A8CE;
+  --color-text-tertiary:  #6D477C;
+  --color-text-disabled:  #33183E;
+
+  --color-accent:        #FF5E7E;
+  --color-accent-bright: #FF758F;
+  --color-accent-soft:   #E63956;
+  --color-accent-dim:    #9E1B32;
+  --color-accent-ghost:  rgba(255, 94, 126, 0.08);
+  --color-accent-glow:   rgba(255, 94, 126, 0.26);
+  --color-accent-subtle: rgba(255, 94, 126, 0.04);
+  --color-accent-border: rgba(255, 94, 126, 0.35);
+
+  --color-accent-2:       #FFB020;
+  --color-accent-2-ghost: rgba(255, 176, 32, 0.10);
+  --color-accent-3:       #A855F7;
+  --color-accent-3-ghost: rgba(168, 85, 247, 0.08);
+
+  --card-bg:            rgba(27, 12, 44, 0.92);
+  --card-border:        rgba(255, 94, 126, 0.18);
+  --glass-bg:           rgba(19, 8, 32, 0.88);
+  --glass-border:       rgba(255, 94, 126, 0.20);
+  --shadow-glow:        0 0 48px rgba(255, 94, 126, 0.24);
+  --shadow-glow-strong: 0 0 72px rgba(255, 94, 126, 0.36);
+
+  --mode-bg:      #0E0516;
+  --mode-text:    #FFF2F5;
+  --mode-accent:  #FF5E7E;
+  --mode-surface: #210F36;
+  --mode-density: 1.35;
 }
 
+/* 4. CINEMA (Director's Cut · Pure OLED Black & Champagne Gold) */
+:root[data-mode="cinema"],
 [data-mode="cinema"] {
-  --mode-bg:      #020202;
-  --mode-text:    #E8E4D6;
-  --mode-accent:  #8AC83E;
-  --mode-surface: #040404;
-  --mode-density: 0.6;
+  --color-void:          #000000;
+  --color-deep:          #040405;
+  --color-surface:       #0A0A0C;
+  --color-surface-2:     #121215;
+  --color-surface-3:     rgba(10, 10, 12, 0.90);
+  --color-border:        rgba(255, 255, 255, 0.06);
+  --color-border-subtle: rgba(255, 255, 255, 0.03);
+  --color-border-bright: rgba(229, 192, 123, 0.22);
+  --color-border-accent: rgba(229, 192, 123, 0.38);
+
+  --color-text-primary:   #F9F7F2;
+  --color-text-secondary: #9E9A8E;
+  --color-text-tertiary:  #4E4B43;
+  --color-text-disabled:  #1E1D19;
+
+  --color-accent:        #E5C07B;
+  --color-accent-bright: #F7D888;
+  --color-accent-soft:   #D4AF37;
+  --color-accent-dim:    #8F7520;
+  --color-accent-ghost:  rgba(229, 192, 123, 0.08);
+  --color-accent-glow:   rgba(229, 192, 123, 0.24);
+  --color-accent-subtle: rgba(229, 192, 123, 0.04);
+  --color-accent-border: rgba(229, 192, 123, 0.32);
+
+  --color-accent-2:       #C8AE7D;
+  --color-accent-2-ghost: rgba(200, 174, 125, 0.08);
+  --color-accent-3:       #E5C07B;
+  --color-accent-3-ghost: rgba(229, 192, 123, 0.07);
+
+  --card-bg:            rgba(9, 9, 11, 0.96);
+  --card-border:        rgba(229, 192, 123, 0.14);
+  --glass-bg:           rgba(4, 4, 5, 0.94);
+  --glass-border:       rgba(229, 192, 123, 0.15);
+  --shadow-glow:        0 0 54px rgba(229, 192, 123, 0.22);
+  --shadow-glow-strong: 0 0 80px rgba(229, 192, 123, 0.32);
+
+  --mode-bg:      #000000;
+  --mode-text:    #F9F7F2;
+  --mode-accent:  #E5C07B;
+  --mode-surface: #0A0A0C;
+  --mode-density: 0.85;
 }

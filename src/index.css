@@ -2,7 +2,6 @@
    GLOBAL RESET + BASE STYLES — NOVA EDITION v4
    Typography: Plus Jakarta Sans · JetBrains Mono
    ============================================ */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500&family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap');
 @import './styles/tokens.css';
 
 *, *::before, *::after {
@@ -36,20 +35,21 @@ body {
   position: relative;
 }
 
-/* ── Fine noise texture overlay ──────────────── */
+/* ── Fine texture overlay (dynamic per mode) ──────────────── */
 body::before {
   content: '';
   position: fixed;
   inset: 0;
   background-image: 
-    radial-gradient(circle, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+    radial-gradient(circle, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
   background-size: 36px 36px;
   pointer-events: none;
   z-index: 0;
+  transition: opacity 600ms ease;
   will-change: auto;
 }
 
-/* ── Ambient accent glow — top center ─────────── */
+/* ── Ambient accent glow — top center (dynamic per mode) ── */
 body::after {
   content: '';
   position: fixed;
@@ -60,16 +60,75 @@ body::after {
   height: 90vh;
   background: radial-gradient(
     ellipse 55% 55% at 50% 0%,
-    rgba(200, 242, 62, 0.035) 0%,
+    var(--color-accent-glow) 0%,
     transparent 72%
   );
   pointer-events: none;
   z-index: 0;
+  transition: background 600ms ease;
   will-change: auto;
 }
 
+/* Mode-specific background atmospheric effects */
+[data-mode="focus"] body::before {
+  background-image: radial-gradient(circle, rgba(200, 242, 62, 0.04) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+[data-mode="focus"] body::after {
+  background: radial-gradient(
+    ellipse 60% 55% at 50% 0%,
+    rgba(200, 242, 62, 0.045) 0%,
+    transparent 72%
+  );
+}
+
+[data-mode="system"] body::before {
+  background-image:
+    linear-gradient(rgba(0, 212, 255, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 212, 255, 0.045) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+[data-mode="system"] body::after {
+  background: radial-gradient(
+    ellipse 70% 60% at 50% 0%,
+    rgba(0, 212, 255, 0.08) 0%,
+    rgba(14, 165, 233, 0.03) 45%,
+    transparent 75%
+  );
+}
+
+[data-mode="play"] body::before {
+  background-image: radial-gradient(circle, rgba(255, 94, 126, 0.07) 1.5px, transparent 1.5px);
+  background-size: 28px 28px;
+}
+[data-mode="play"] body::after {
+  background: radial-gradient(
+    circle at 50% -10%,
+    rgba(255, 94, 126, 0.10) 0%,
+    rgba(255, 176, 32, 0.05) 45%,
+    transparent 70%
+  );
+}
+
+[data-mode="cinema"] body::before {
+  background: none; /* pure pitch-black theatrical stillness */
+}
+[data-mode="cinema"] body::after {
+  background: radial-gradient(
+    ellipse 50% 45% at 50% -5%,
+    rgba(229, 192, 123, 0.09) 0%,
+    rgba(180, 130, 40, 0.03) 40%,
+    transparent 65%
+  );
+}
+
+/* Cinema Mode Letterbox Frame Accent */
+[data-mode="cinema"] body {
+  box-shadow: inset 0 6px 18px rgba(0, 0, 0, 0.9), inset 0 -6px 18px rgba(0, 0, 0, 0.9);
+}
+
 /* ── Premium scrollbar ─────────────────────── */
-::-webkit-scrollbar { width: 2px; }
+::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
   background: var(--color-accent-dim);
@@ -84,13 +143,13 @@ body::after {
 
 /* ── Selection ──────────────────────────────── */
 ::selection {
-  background: rgba(200, 242, 62, 0.18);
+  background: var(--color-accent-glow);
   color: var(--color-accent-bright);
 }
 
 /* ── Focus ring ─────────────────────────────── */
 :focus-visible {
-  outline: 2px solid rgba(200, 242, 62, 0.45);
+  outline: 2px solid var(--color-accent-border);
   outline-offset: 4px;
   border-radius: var(--border-radius-sm);
 }

@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePortfolioData, DEFAULT_PORTFOLIO_DATA } from '../../context/PortfolioDataContext';
+import PdfPreviewModal from '../shared/PdfPreviewModal';
 
 const AUTH_STORAGE_KEY = 'mridul_hq_auth_token_v1';
 const PASSCODE_STORAGE_KEY = 'mridul_hq_passcode_v1';
@@ -1515,6 +1516,7 @@ function ProjectsTab({ data, updateSection, showToast }) {
       tags: ['Product', 'Strategy'],
       accentColor: '#4A90A0',
       metric: { value: '100+', label: 'Impact Metric' },
+      link: '',
     };
     const next = [...list, newProj];
     setList(next);
@@ -1640,6 +1642,45 @@ function ProjectsTab({ data, updateSection, showToast }) {
                 />
               </InputGroup>
             </div>
+
+            <div style={{ marginTop: '12px' }}>
+              <InputGroup label="Project Live Link / URL (optional — leaves 'Live' button hidden if blank)">
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type="url"
+                    placeholder="https://example.com (or enter domain, e.g. mysite.com)"
+                    value={proj.link || ''}
+                    onChange={(e) => handleUpdate(i, 'link', e.target.value)}
+                    style={{ ...inputStyle, paddingRight: proj.link?.trim() ? '82px' : '12px' }}
+                  />
+                  {proj.link && proj.link.trim() && (
+                    <a
+                      href={proj.link.startsWith('http') ? proj.link.trim() : `https://${proj.link.trim()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        position: 'absolute',
+                        right: '8px',
+                        background: 'rgba(200,242,62,0.15)',
+                        color: '#C8F23E',
+                        border: '1px solid rgba(200,242,62,0.3)',
+                        borderRadius: '6px',
+                        padding: '4px 10px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      Test ↗
+                    </a>
+                  )}
+                </div>
+              </InputGroup>
+            </div>
           </div>
         ))}
       </div>
@@ -1657,6 +1698,7 @@ function ProjectsTab({ data, updateSection, showToast }) {
 ───────────────────────────────────────────────────────────── */
 function CaseStudiesTab({ data, updateSection, showToast }) {
   const [list, setList] = useState(data || []);
+  const [previewPdf, setPreviewPdf] = useState(null);
 
   useEffect(() => {
     setList(data || []);
@@ -1680,6 +1722,55 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
     next[studyIndex] = { ...next[studyIndex], impact: impacts };
     setList(next);
     updateSection('caseStudies', next);
+  };
+
+  const handlePdfUpload = (index, file) => {
+    if (!file) return;
+    if (file.type !== 'application/pdf' && !file.name.toLowerCase().endsWith('.pdf')) {
+      showToast('Please select a valid PDF file (.pdf).', 'error');
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      showToast('File is too large. Please upload a PDF under 8 MB.', 'error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const base64Data = e.target.result;
+      const sizeStr = file.size < 1024 * 1024
+        ? `${(file.size / 1024).toFixed(1)} KB`
+        : `${(file.size / (1024 * 1024)).toFixed(2)} MB`;
+
+      const next = [...list];
+      next[index] = {
+        ...next[index],
+        pdfUrl: base64Data,
+        pdfFileName: file.name,
+        pdfFileSize: sizeStr,
+        pdfUpdatedAt: new Date().toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' }),
+      };
+      setList(next);
+      updateSection('caseStudies', next);
+      showToast(`PDF "${file.name}" uploaded for ${next[index].title}!`);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleRemovePdf = (index) => {
+    if (window.confirm(`Remove PDF document from "${list[index].title}"?`)) {
+      const next = [...list];
+      next[index] = {
+        ...next[index],
+        pdfUrl: null,
+        pdfFileName: null,
+        pdfFileSize: null,
+        pdfUpdatedAt: null,
+      };
+      setList(next);
+      updateSection('caseStudies', next);
+      showToast(`PDF removed from "${next[index].title}".`);
+    }
   };
 
   return (
@@ -1755,6 +1846,45 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
               </InputGroup>
             </div>
 
+            <div style={{ marginBottom: '14px' }}>
+              <InputGroup label="Project Live Link / URL (optional — leaves 'Live' button hidden if blank)">
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <input
+                    type="url"
+                    placeholder="https://example.com (or enter domain, e.g. mysite.com)"
+                    value={study.link || ''}
+                    onChange={(e) => handleUpdate(i, 'link', e.target.value)}
+                    style={{ ...inputStyle, paddingRight: study.link?.trim() ? '82px' : '12px' }}
+                  />
+                  {study.link && study.link.trim() && (
+                    <a
+                      href={study.link.startsWith('http') ? study.link.trim() : `https://${study.link.trim()}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        position: 'absolute',
+                        right: '8px',
+                        background: 'rgba(200,242,62,0.15)',
+                        color: '#C8F23E',
+                        border: '1px solid rgba(200,242,62,0.3)',
+                        borderRadius: '6px',
+                        padding: '4px 10px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        fontFamily: "'JetBrains Mono', monospace",
+                        textDecoration: 'none',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                      }}
+                    >
+                      Test ↗
+                    </a>
+                  )}
+                </div>
+              </InputGroup>
+            </div>
+
             {/* Impact Metric Chips */}
             <div style={{ marginTop: '12px' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: '#C8F23E', marginBottom: '8px' }}>
@@ -1779,6 +1909,231 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
                 ))}
               </div>
             </div>
+
+            {/* Case Study PDF Attachment Section */}
+            <div style={{
+              marginTop: '16px',
+              background: 'rgba(255, 255, 255, 0.02)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              padding: '16px 18px',
+            }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', flexWrap: 'wrap', gap: 8 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ fontSize: '15px' }}>📄</span>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF' }}>
+                      Case Study PDF Document
+                    </div>
+                    <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.45)', fontFamily: "'JetBrains Mono', monospace" }}>
+                      Visitors can preview and download this document on your portfolio
+                    </div>
+                  </div>
+                </div>
+
+                {study.pdfUrl && (
+                  <span style={{
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '10px',
+                    color: '#C8F23E',
+                    background: 'rgba(200, 242, 62, 0.12)',
+                    border: '1px solid rgba(200, 242, 62, 0.3)',
+                    padding: '3px 8px',
+                    borderRadius: '4px',
+                    fontWeight: 700,
+                  }}>
+                    ACTIVE ON PORTFOLIO
+                  </span>
+                )}
+              </div>
+
+              {study.pdfUrl ? (
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: 12,
+                  background: 'rgba(0, 0, 0, 0.25)',
+                  border: '1px solid rgba(255, 255, 255, 0.06)',
+                  borderRadius: '10px',
+                  padding: '12px 16px',
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, minWidth: 0 }}>
+                    <div style={{
+                      width: 38,
+                      height: 38,
+                      borderRadius: 8,
+                      background: 'rgba(255, 75, 75, 0.15)',
+                      border: '1px solid rgba(255, 75, 75, 0.35)',
+                      color: '#FF6B6B',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '10px',
+                      fontWeight: 800,
+                      fontFamily: "'JetBrains Mono', monospace",
+                      flexShrink: 0,
+                    }}>
+                      PDF
+                    </div>
+                    <div style={{ minWidth: 0 }}>
+                      <div
+                        style={{
+                          fontSize: '13px',
+                          fontWeight: 700,
+                          color: '#FFFFFF',
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          maxWidth: 'clamp(180px, 30vw, 360px)',
+                        }}
+                        title={study.pdfFileName || `${study.title}_Case_Study.pdf`}
+                      >
+                        {study.pdfFileName || `${study.title}_Case_Study.pdf`}
+                      </div>
+                      <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.45)', fontFamily: "'JetBrains Mono', monospace" }}>
+                        {study.pdfFileSize || 'PDF Document'} {study.pdfUpdatedAt && `· Uploaded ${study.pdfUpdatedAt}`}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+                    <button
+                      type="button"
+                      onClick={() => setPreviewPdf({
+                        url: study.pdfUrl,
+                        title: study.title,
+                        fileName: study.pdfFileName,
+                        fileSize: study.pdfFileSize,
+                      })}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.08)',
+                        border: '1px solid rgba(255, 255, 255, 0.15)',
+                        color: '#EEEEEE',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                      }}
+                    >
+                      👁️ Preview
+                    </button>
+
+                    <a
+                      href={study.pdfUrl}
+                      download={study.pdfFileName || `${study.title}_Case_Study.pdf`}
+                      style={{
+                        background: 'rgba(200, 242, 62, 0.12)',
+                        border: '1px solid rgba(200, 242, 62, 0.35)',
+                        color: '#C8F23E',
+                        borderRadius: '8px',
+                        padding: '6px 12px',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        textDecoration: 'none',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                      }}
+                    >
+                      ⬇️ Download
+                    </a>
+
+                    <label style={{
+                      background: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.12)',
+                      color: '#CCCCCC',
+                      borderRadius: '8px',
+                      padding: '6px 12px',
+                      fontSize: '11px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                    }}>
+                      🔄 Replace
+                      <input
+                        type="file"
+                        accept="application/pdf"
+                        onChange={(e) => {
+                          if (e.target.files?.[0]) {
+                            handlePdfUpload(i, e.target.files[0]);
+                          }
+                        }}
+                        style={{ display: 'none' }}
+                      />
+                    </label>
+
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePdf(i)}
+                      style={{
+                        background: 'rgba(255, 80, 80, 0.1)',
+                        border: '1px solid rgba(255, 80, 80, 0.25)',
+                        color: '#FF6B6B',
+                        borderRadius: '8px',
+                        padding: '6px 10px',
+                        fontSize: '11px',
+                        fontWeight: 600,
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Remove
+                    </button>
+                  </div>
+                </div>
+              ) : (
+                <label style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  padding: '24px 16px',
+                  border: '1px dashed rgba(255, 255, 255, 0.16)',
+                  borderRadius: '10px',
+                  background: 'rgba(255, 255, 255, 0.01)',
+                  cursor: 'pointer',
+                  transition: 'border-color 200ms ease, background 200ms ease',
+                }}>
+                  <div style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '50%',
+                    background: 'rgba(200, 242, 62, 0.1)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '16px',
+                  }}>
+                    📄
+                  </div>
+                  <div style={{ fontSize: '13px', fontWeight: 600, color: '#F0F0F0' }}>
+                    Click to upload Case Study PDF (PRD, Spec, or Slides)
+                  </div>
+                  <div style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.4)', fontFamily: "'JetBrains Mono', monospace" }}>
+                    Supports PDF up to 8 MB · Enables Preview & Download on portfolio
+                  </div>
+                  <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) => {
+                      if (e.target.files?.[0]) {
+                        handlePdfUpload(i, e.target.files[0]);
+                      }
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                </label>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -1787,6 +2142,15 @@ function CaseStudiesTab({ data, updateSection, showToast }) {
         updateSection('caseStudies', list);
         showToast('Case studies saved & live on portfolio!');
       }} />
+
+      <PdfPreviewModal
+        isOpen={Boolean(previewPdf)}
+        onClose={() => setPreviewPdf(null)}
+        pdfUrl={previewPdf?.url}
+        fileName={previewPdf?.fileName}
+        title={previewPdf?.title}
+        fileSize={previewPdf?.fileSize}
+      />
     </SectionWrapper>
   );
 }

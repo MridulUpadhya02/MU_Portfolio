@@ -6,6 +6,7 @@ import {
   useReducedMotion,
 } from 'framer-motion';
 import { CURSOR_STATES } from '../../hooks/useCursor';
+import PdfPreviewModal from '../shared/PdfPreviewModal';
 
 /* ─────────────────────────────────────────
    ANIMATED NUMBER COUNTER
@@ -193,6 +194,7 @@ function Rule() {
 export default function CaseStudy({ project, onClose, onOpenSimulator, setCursor, resetCursor }) {
   const prefersReduced = useReducedMotion();
   const scrollRef = useRef(null);
+  const [previewPdf, setPreviewPdf] = useState(null);
 
   // ESC key handler
   useEffect(() => {
@@ -325,32 +327,150 @@ export default function CaseStudy({ project, onClose, onOpenSimulator, setCursor
                 )}
               </div>
 
-              {/* Right: close button */}
-              <motion.button
-                onClick={onClose}
-                onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
-                onMouseLeave={resetCursor}
-                whileHover={{ scale: 1.08, borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
-                whileTap={{ scale: 0.95 }}
-                style={{
-                  cursor: 'pointer',
-                  background: 'transparent',
-                  border: '1px solid var(--color-border)',
-                  color: 'var(--color-text-secondary)',
-                  fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '10px',
-                  letterSpacing: '0.2em',
-                  padding: '6px 12px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  flexShrink: 0,
-                  borderRadius: '4px',
-                }}
-              >
-                <span>ESC</span>
-                <span style={{ fontSize: '13px', lineHeight: 1 }}>✕</span>
-              </motion.button>
+              {/* Right: live button (if provided) + close button */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+                {project.link && typeof project.link === 'string' && project.link.trim() && (
+                  <motion.a
+                    href={project.link.trim().startsWith('http') ? project.link.trim() : `https://${project.link.trim()}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onMouseEnter={() => setCursor?.(CURSOR_STATES.EXPLORE)}
+                    onMouseLeave={resetCursor}
+                    whileHover={{ scale: 1.05, boxShadow: '0 0 16px rgba(200, 242, 62, 0.3)' }}
+                    whileTap={{ scale: 0.95 }}
+                    style={{
+                      cursor: 'pointer',
+                      background: 'rgba(200, 242, 62, 0.12)',
+                      border: '1px solid #C8F23E',
+                      color: '#C8F23E',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      letterSpacing: '0.12em',
+                      padding: '6px 14px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      textDecoration: 'none',
+                      borderRadius: '4px',
+                    }}
+                  >
+                    <span style={{
+                      width: 6,
+                      height: 6,
+                      borderRadius: '50%',
+                      backgroundColor: '#C8F23E',
+                      boxShadow: '0 0 6px #C8F23E',
+                      display: 'inline-block',
+                    }} />
+                    <span>LIVE PROJECT</span>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                      <polyline points="15 3 21 3 21 9" />
+                      <line x1="10" y1="14" x2="21" y2="3" />
+                    </svg>
+                  </motion.a>
+                )}
+
+                {/* PDF Quick Actions (Top Bar) */}
+                {project.pdfUrl && (
+                  <>
+                    <motion.button
+                      onClick={() => setPreviewPdf({
+                        url: project.pdfUrl,
+                        title: project.title,
+                        name: project.pdfName || `${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-spec.pdf`,
+                        size: project.pdfSize,
+                      })}
+                      onMouseEnter={() => setCursor?.(CURSOR_STATES.EXPLORE)}
+                      onMouseLeave={resetCursor}
+                      whileHover={{ scale: 1.05, boxShadow: '0 0 14px rgba(255, 107, 107, 0.35)' }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        cursor: 'pointer',
+                        background: 'rgba(255, 107, 107, 0.12)',
+                        border: '1px solid #FF6B6B',
+                        color: '#FF6B6B',
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        letterSpacing: '0.12em',
+                        padding: '6px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        borderRadius: '4px',
+                      }}
+                      title="Preview Case Study PDF"
+                    >
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                      <span>PREVIEW PDF</span>
+                    </motion.button>
+
+                    <motion.a
+                      href={project.pdfUrl}
+                      download={project.pdfName || `${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-spec.pdf`}
+                      onMouseEnter={() => setCursor?.(CURSOR_STATES.EXPLORE)}
+                      onMouseLeave={resetCursor}
+                      whileHover={{ scale: 1.05, background: 'rgba(255, 255, 255, 0.1)' }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        cursor: 'pointer',
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid var(--color-border)',
+                        color: 'var(--color-text-secondary)',
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '10px',
+                        fontWeight: 600,
+                        letterSpacing: '0.12em',
+                        padding: '6px 12px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        textDecoration: 'none',
+                        borderRadius: '4px',
+                      }}
+                      title="Download Case Study PDF"
+                    >
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                      </svg>
+                      <span>DOWNLOAD</span>
+                    </motion.a>
+                  </>
+                )}
+
+                <motion.button
+                  onClick={onClose}
+                  onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
+                  onMouseLeave={resetCursor}
+                  whileHover={{ scale: 1.08, borderColor: 'var(--color-accent)', color: 'var(--color-accent)' }}
+                  whileTap={{ scale: 0.95 }}
+                  style={{
+                    cursor: 'pointer',
+                    background: 'transparent',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-secondary)',
+                    fontFamily: "'JetBrains Mono', monospace",
+                    fontSize: '10px',
+                    letterSpacing: '0.2em',
+                    padding: '6px 12px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    flexShrink: 0,
+                    borderRadius: '4px',
+                  }}
+                >
+                  <span>ESC</span>
+                  <span style={{ fontSize: '13px', lineHeight: 1 }}>✕</span>
+                </motion.button>
+              </div>
             </div>
 
             {/* ── SCROLLABLE CONTENT ── */}
@@ -364,6 +484,146 @@ export default function CaseStudy({ project, onClose, onOpenSimulator, setCursor
                 scrollbarColor: 'var(--color-border) transparent',
               }}
             >
+            {/* Attached PDF Documentation Card */}
+            {project.pdfUrl && (
+              <motion.div
+                initial={{ opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25, duration: 0.5 }}
+                style={{
+                  marginBottom: '32px',
+                  padding: '20px 24px',
+                  border: '1px solid rgba(255, 107, 107, 0.3)',
+                  background: 'linear-gradient(135deg, rgba(255, 107, 107, 0.08) 0%, rgba(20, 20, 26, 0.6) 100%)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  gap: '16px',
+                  flexWrap: 'wrap',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '14px', minWidth: '240px' }}>
+                  <div style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: '8px',
+                    background: 'rgba(255, 107, 107, 0.15)',
+                    border: '1px solid rgba(255, 107, 107, 0.35)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontSize: '20px',
+                    flexShrink: 0
+                  }}>
+                    📄
+                  </div>
+                  <div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', flexWrap: 'wrap' }}>
+                      <span style={{
+                        fontFamily: "'JetBrains Mono', monospace",
+                        fontSize: '9px',
+                        letterSpacing: '0.2em',
+                        textTransform: 'uppercase',
+                        color: '#FF6B6B',
+                        fontWeight: 700
+                      }}>
+                        ATTACHED DOCUMENTATION / SPEC
+                      </span>
+                      {project.pdfSize && (
+                        <span style={{
+                          fontFamily: "'JetBrains Mono', monospace",
+                          fontSize: '9px',
+                          color: 'var(--color-text-tertiary)',
+                          background: 'rgba(255,255,255,0.06)',
+                          padding: '2px 6px',
+                          borderRadius: '3px'
+                        }}>
+                          {project.pdfSize}
+                        </span>
+                      )}
+                    </div>
+                    <div style={{
+                      fontFamily: "'Plus Jakarta Sans', sans-serif",
+                      fontSize: '13px',
+                      color: 'var(--color-text-primary)',
+                      fontWeight: 500
+                    }}>
+                      {project.pdfName || `${project.title} — Product Specification & Case Study`}
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+                  <motion.button
+                    onClick={() => setPreviewPdf({
+                      url: project.pdfUrl,
+                      title: project.title,
+                      name: project.pdfName || `${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-spec.pdf`,
+                      size: project.pdfSize,
+                    })}
+                    onMouseEnter={() => setCursor?.(CURSOR_STATES.EXPLORE)}
+                    onMouseLeave={resetCursor}
+                    whileHover={{ scale: 1.04, background: '#FF6B6B', color: '#000' }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      cursor: 'pointer',
+                      background: 'rgba(255, 107, 107, 0.15)',
+                      border: '1px solid #FF6B6B',
+                      color: '#FF6B6B',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '10px',
+                      letterSpacing: '0.12em',
+                      padding: '10px 18px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      fontWeight: 700,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                      <circle cx="12" cy="12" r="3" />
+                    </svg>
+                    <span>PREVIEW PDF</span>
+                  </motion.button>
+                  <motion.a
+                    href={project.pdfUrl}
+                    download={project.pdfName || `${project.title.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-spec.pdf`}
+                    onMouseEnter={() => setCursor?.(CURSOR_STATES.EXPLORE)}
+                    onMouseLeave={resetCursor}
+                    whileHover={{ scale: 1.04, background: 'rgba(255,255,255,0.1)' }}
+                    whileTap={{ scale: 0.96 }}
+                    style={{
+                      cursor: 'pointer',
+                      background: 'rgba(255, 255, 255, 0.05)',
+                      border: '1px solid var(--color-border)',
+                      color: 'var(--color-text-primary)',
+                      fontFamily: "'JetBrains Mono', monospace",
+                      fontSize: '10px',
+                      letterSpacing: '0.12em',
+                      padding: '10px 16px',
+                      borderRadius: '5px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      textDecoration: 'none',
+                      fontWeight: 600,
+                      transition: 'all 0.2s ease',
+                    }}
+                  >
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="7 10 12 15 17 10" />
+                      <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    <span>DOWNLOAD</span>
+                  </motion.a>
+                </div>
+              </motion.div>
+            )}
             {/* Interactive simulator CTA (ARAS) */}
             {project.isInteractive && (
               <motion.div
@@ -563,6 +823,16 @@ export default function CaseStudy({ project, onClose, onOpenSimulator, setCursor
             <div style={{ height: '80px' }} />
           </div>
         </motion.div>
+
+        {/* PDF Preview Modal */}
+        <PdfPreviewModal
+          isOpen={Boolean(previewPdf)}
+          fileUrl={previewPdf?.url}
+          fileName={previewPdf?.name}
+          title={previewPdf?.title}
+          fileSize={previewPdf?.size}
+          onClose={() => setPreviewPdf(null)}
+        />
       </motion.div>
     </AnimatePresence>
   );

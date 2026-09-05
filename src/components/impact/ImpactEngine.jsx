@@ -178,14 +178,14 @@ function MetricCard({ metric, inView, index }) {
         position: 'absolute',
         top: 0, left: 0, right: 0,
         height: 1,
-        background: 'linear-gradient(90deg, transparent, rgba(200,242,62,0.4), transparent)',
+        background: 'linear-gradient(90deg, transparent, var(--color-accent-border), transparent)',
       }} />
 
       {/* Value */}
       <div style={{
         fontFamily: "'Plus Jakarta Sans', sans-serif",
         fontSize: 'clamp(34px, 4.2vw, 52px)',
-        color: '#C8F23E',
+        color: 'var(--color-accent)',
         lineHeight: 1,
         marginBottom: 14,
         fontWeight: 800,
@@ -331,7 +331,7 @@ export default function ImpactEngine() {
         >
           THE IMPACT
           <br />
-          <span style={{ color: '#C8F23E' }}>ENGINE</span>
+          <span style={{ color: 'var(--color-accent)' }}>ENGINE</span>
         </motion.h2>
 
         <motion.p
@@ -458,13 +458,13 @@ export default function ImpactEngine() {
             justifyContent: 'center',
             cursor: 'col-resize',
             zIndex: 10,
-            boxShadow: '0 0 24px rgba(200,242,62,0.18), 0 4px 16px rgba(0,0,0,0.4)',
+            boxShadow: '0 0 24px var(--color-accent-glow), 0 4px 16px rgba(0,0,0,0.4)',
           }}
         >
           <span style={{
             fontFamily: 'DM Mono, monospace',
             fontSize: 12,
-            color: '#C8F23E',
+            color: 'var(--color-accent)',
             letterSpacing: '-3px',
             userSelect: 'none',
           }}>

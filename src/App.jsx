@@ -10,11 +10,11 @@ import { useMode } from './hooks/useMode';
 import { useSound } from './hooks/useSound';
 import { useEasterEggs } from './hooks/useEasterEggs';
 import { PortfolioDataProvider } from './context/PortfolioDataContext';
-import AdminPanel from './components/admin/AdminPanel';
 
 // Lazy load heavy sections
 import { lazy, Suspense, useEffect } from 'react';
 
+const AdminPanel = lazy(() => import('./components/admin/AdminPanel'));
 const HowIThink = lazy(() => import('./components/think/HowIThink'));
 const Work = lazy(() => import('./components/work/Work'));
 const CaseStudy = lazy(() => import('./components/work/CaseStudy'));
@@ -175,7 +175,7 @@ export default function App() {
   }, []);
 
   const { setCursor, resetCursor } = useCursor();
-  const { mode, setMode } = useMode();
+  const { mode, setMode, cycleMode } = useMode();
   const { enabled: soundEnabled, toggle: toggleSound, sounds } = useSound();
 
   const { handleNameClick } = useEasterEggs({
@@ -210,7 +210,9 @@ export default function App() {
   return (
     <PortfolioDataProvider>
       {currentPath === '/admin' ? (
-        <AdminPanel onBack={() => navigateTo('/')} />
+        <Suspense fallback={<SectionLoader />}>
+          <AdminPanel onBack={() => navigateTo('/')} />
+        </Suspense>
       ) : (
         <>
           {/* Custom cursor — disabled; using native OS cursor */}
@@ -223,9 +225,7 @@ export default function App() {
             )}
           </AnimatePresence>
 
-      {/* Main content */}
-      <AnimatePresence>
-        {introComplete && (
+          {/* Main content */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -235,6 +235,7 @@ export default function App() {
             <SystemNav
               mode={mode}
               setMode={setMode}
+              cycleMode={cycleMode}
               soundEnabled={soundEnabled}
               onSoundToggle={toggleSound}
               setCursor={setCursor}
@@ -320,8 +321,6 @@ export default function App() {
               />
             </Suspense>
           </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Case Study overlay */}
       <AnimatePresence>

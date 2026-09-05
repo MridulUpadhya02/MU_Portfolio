@@ -256,15 +256,15 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                   width: '56px',
                   height: '56px',
                   borderRadius: '50%',
-                  background: 'rgba(200, 242, 62, 0.15)',
-                  border: '2px solid #C8F23E',
+                  background: 'var(--color-accent-ghost)',
+                  border: '2px solid var(--color-accent)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 18px',
                 }}
               >
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#C8F23E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
               </div>
@@ -272,12 +272,12 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                 Message Sent! 🎉
               </h3>
               <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '14px', color: 'rgba(200,210,185,0.7)', lineHeight: 1.6, margin: '0 0 24px' }}>
-                Thanks for reaching out! Mridul will reply within <strong style={{ color: '#C8F23E' }}>12 hours</strong>.
+                Thanks for reaching out! Mridul will reply within <strong style={{ color: 'var(--color-accent)' }}>12 hours</strong>.
               </p>
               <button
                 onClick={onClose}
                 style={{
-                  background: '#C8F23E',
+                  background: 'var(--color-accent)',
                   border: 'none',
                   borderRadius: '10px',
                   color: '#050608',
@@ -306,8 +306,8 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                   padding: '4px 12px',
                 }}
               >
-                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#C8F23E', boxShadow: '0 0 8px #C8F23E' }} />
-                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700, letterSpacing: '0.14em', color: '#C8F23E', textTransform: 'uppercase' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: 'var(--color-accent)', boxShadow: '0 0 8px var(--color-accent-glow)' }} />
+                <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: '10px', fontWeight: 700, letterSpacing: '0.14em', color: 'var(--color-accent)', textTransform: 'uppercase' }}>
                   ⚡ QUICKEST RESPONSE · WITHIN 12 HOURS
                 </span>
               </div>
@@ -316,7 +316,7 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                 Say Hello to Mridul 👋
               </h3>
               <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: '13px', color: 'rgba(200, 210, 185, 0.7)', lineHeight: 1.5, margin: '0 0 20px' }}>
-                Drop a quick note below. This is the <strong>fastest way to reach me</strong> with a guaranteed reply within <strong style={{ color: '#C8F23E' }}>12 hours</strong>.
+                Drop a quick note below. This is the <strong>fastest way to reach me</strong> with a guaranteed reply within <strong style={{ color: 'var(--color-accent)' }}>12 hours</strong>.
               </p>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
@@ -406,7 +406,7 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                 onMouseLeave={() => resetCursor?.()}
                 style={{
                   width: '100%',
-                  background: '#C8F23E',
+                  background: 'var(--color-accent)',
                   color: '#050608',
                   border: 'none',
                   borderRadius: '10px',
@@ -419,7 +419,7 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                   alignItems: 'center',
                   justifyContent: 'center',
                   gap: '8px',
-                  boxShadow: '0 4px 18px rgba(200,242,62,0.3)',
+                  boxShadow: '0 4px 18px var(--color-accent-glow)',
                   opacity: submitting ? 0.7 : 1,
                 }}
               >
@@ -436,7 +436,7 @@ function SayHelloModal({ isOpen, onClose, recipientEmail = 'mridulupadhya861@gma
                     textDecoration: 'none',
                     letterSpacing: '0.04em',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.color = '#C8F23E')}
+                  onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--color-accent)')}
                   onMouseLeave={(e) => (e.currentTarget.style.color = 'rgba(200, 210, 185, 0.55)')}
                 >
                   Or open default email client ↗
@@ -551,7 +551,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
     boxSizing: 'border-box',
   };
 
-  const handleFocus = (e) => { e.target.style.borderColor = 'rgba(200,242,62,0.5)'; e.target.style.background = 'rgba(200,242,62,0.04)'; };
+  const handleFocus = (e) => { e.target.style.borderColor = 'var(--color-accent)'; e.target.style.background = 'var(--color-accent-ghost)'; };
   const handleBlur  = (e) => { e.target.style.borderColor = 'rgba(255,255,255,0.1)';  e.target.style.background = 'rgba(255,255,255,0.03)'; };
 
   const FV = {
@@ -570,13 +570,13 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
           {/* Text */}
           <div>
             <motion.div custom={0} variants={FV} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 'clamp(16px, 2.5vh, 28px)' }}>
-              <span style={{ color: '#C8F23E', fontSize: 14 }}>✦</span>
-              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(10px, 1vw, 12px)', letterSpacing: '0.18em', color: '#C8F23E', textTransform: 'uppercase' }}>LET&apos;S CONNECT</span>
+              <span style={{ color: 'var(--color-accent)', fontSize: 14 }}>✦</span>
+              <span style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 'clamp(10px, 1vw, 12px)', letterSpacing: '0.18em', color: 'var(--color-accent)', textTransform: 'uppercase' }}>LET&apos;S CONNECT</span>
             </motion.div>
 
             <motion.h2 custom={1} variants={FV} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(32px, 5vw, 72px)', fontWeight: 800, letterSpacing: '-0.03em', lineHeight: 1.05, margin: '0 0 clamp(16px, 2.5vh, 24px)', color: '#fff' }}>
               {contact.headline || "Let's Build Something"}{' '}
-              <span style={{ color: '#C8F23E', display: 'block' }}>{contact.highlightText || 'Impactful Together'}</span>
+              <span style={{ color: 'var(--color-accent)', display: 'block' }}>{contact.highlightText || 'Impactful Together'}</span>
             </motion.h2>
 
             <motion.p custom={2} variants={FV} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(14px, 1.5vw, 17px)', fontWeight: 400, color: 'rgba(220,230,210,0.65)', lineHeight: 1.7, margin: '0 0 clamp(28px, 4vh, 44px)', maxWidth: 480 }}>
@@ -586,9 +586,9 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
             <motion.div custom={3} variants={FV} initial="hidden" whileInView="visible" viewport={{ once: true }} style={{ display: 'flex', flexWrap: 'wrap', gap: 'clamp(14px, 2vw, 28px)' }}>
               {dynamicBadges.map(({ icon, title, sub }) => (
                 <div key={title} style={{ display: 'flex', alignItems: 'flex-start', gap: 10, minWidth: 'min(100%, 140px)' }}>
-                  <div style={{ color: '#C8F23E', flexShrink: 0, marginTop: 2 }}>{icon}</div>
+                  <div style={{ color: 'var(--color-accent)', flexShrink: 0, marginTop: 2 }}>{icon}</div>
                   <div>
-                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(12px, 1.2vw, 14px)', fontWeight: 600, color: '#C8F23E', marginBottom: 3 }}>{title}</div>
+                    <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(12px, 1.2vw, 14px)', fontWeight: 600, color: 'var(--color-accent)', marginBottom: 3 }}>{title}</div>
                     <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(11px, 1vw, 12px)', color: 'rgba(200,210,185,0.6)', lineHeight: 1.5 }}>{sub}</div>
                   </div>
                 </div>
@@ -603,18 +603,18 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 380px), 1fr))', gap: 'clamp(20px, 3vw, 32px)' }}>
 
           {/* Form card */}
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 'clamp(24px, 4vw, 40px)' }}>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 20, padding: 'clamp(24px, 4vw, 40px)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
               <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 700, color: '#fff', margin: 0 }}>Send Me a Message</h3>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8F23E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
             </div>
             <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(12px, 1.2vw, 14px)', color: 'rgba(200,210,185,0.55)', margin: '0 0 clamp(20px, 3vh, 32px)', lineHeight: 1.5 }}>Drop a message and I&apos;ll get back to you!</p>
 
             <AnimatePresence mode="wait">
               {sent ? (
                 <motion.div key="sent" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} style={{ textAlign: 'center', padding: 'clamp(30px, 5vh, 50px) 0', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 16 }}>
-                  <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'rgba(200,242,62,0.15)', border: '2px solid #C8F23E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#C8F23E" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  <div style={{ width: 52, height: 52, borderRadius: '50%', background: 'var(--color-accent-ghost)', border: '2px solid var(--color-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                   </div>
                   <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(16px, 1.6vw, 20px)', fontWeight: 700, color: '#fff' }}>Message Sent!</div>
                   <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(13px, 1.2vw, 15px)', color: 'rgba(200,210,185,0.6)', lineHeight: 1.6 }}>Thanks for reaching out. I&apos;ll get back to you within 24 hours.</div>
@@ -659,7 +659,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
                     onMouseLeave={() => resetCursor?.()}
                     style={{
                       width: '100%',
-                      background: '#C8F23E',
+                      background: 'var(--color-accent)',
                       border: 'none',
                       borderRadius: 10,
                       color: '#0a0a0f',
@@ -673,7 +673,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
                       alignItems: 'center',
                       justifyContent: 'center',
                       gap: 10,
-                      marginTop: 4,
+                      boxShadow: '0 4px 18px var(--color-accent-glow)',
                     }}
                   >
                     {submitting ? 'Sending Message...' : 'Send Message'}
@@ -684,13 +684,12 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
             </AnimatePresence>
           </motion.div>
 
-          {/* Connect card */}
-          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: 20, padding: 'clamp(24px, 4vw, 40px)' }}>
-            <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 700, color: '#fff', margin: '0 0 6px' }}>Connect With Me</h3>
-            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(12px, 1.2vw, 14px)', color: 'rgba(200,210,185,0.55)', margin: '0 0 clamp(20px, 3vh, 32px)', lineHeight: 1.5 }}>Reach out through your preferred platform</p>
+          <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: 20, padding: 'clamp(24px, 4vw, 40px)', display: 'flex', flexDirection: 'column' }}>
+            <h3 style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(18px, 2vw, 24px)', fontWeight: 700, color: '#fff', margin: '0 0 6px' }}>Direct Connect</h3>
+            <p style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(12px, 1.2vw, 14px)', color: 'rgba(200,210,185,0.55)', margin: '0 0 clamp(20px, 3vh, 32px)', lineHeight: 1.5 }}>Reach out directly on any of these channels</p>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-              {dynamicLinks.map(({ icon, label, value, href }) => {
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 1.5vh, 14px)', flex: 1 }}>
+              {dynamicLinks.map(({ label, value, href, icon }) => {
                 const inner = (
                   <motion.div
                     key={label}
@@ -698,10 +697,10 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
                     onHoverEnd={() => setHoveredLink(null)}
                     onMouseEnter={() => href && setCursor?.('LINK')}
                     onMouseLeave={() => resetCursor?.()}
-                    animate={{ backgroundColor: hoveredLink === label ? 'rgba(200,242,62,0.06)' : 'rgba(255,255,255,0.0)' }}
-                    style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 'clamp(12px, 1.8vh, 18px) clamp(12px, 1.5vw, 16px)', borderRadius: 12, border: '1px solid', borderColor: hoveredLink === label ? 'rgba(200,242,62,0.2)' : 'rgba(255,255,255,0.07)', cursor: href ? 'pointer' : 'default', transition: 'border-color 200ms ease', textDecoration: 'none' }}
+                    animate={{ backgroundColor: hoveredLink === label ? 'var(--color-accent-ghost)' : 'rgba(255,255,255,0.0)' }}
+                    style={{ display: 'flex', alignItems: 'center', gap: 14, padding: 'clamp(12px, 1.8vh, 18px) clamp(12px, 1.5vw, 16px)', borderRadius: 12, border: '1px solid', borderColor: hoveredLink === label ? 'var(--color-accent-border)' : 'rgba(255,255,255,0.07)', cursor: href ? 'pointer' : 'default', transition: 'border-color 200ms ease', textDecoration: 'none' }}
                   >
-                    <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: hoveredLink === label ? 'rgba(200,242,62,0.15)' : 'rgba(255,255,255,0.06)', border: '1px solid', borderColor: hoveredLink === label ? 'rgba(200,242,62,0.3)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: hoveredLink === label ? '#C8F23E' : 'rgba(200,210,185,0.6)', transition: 'all 200ms ease' }}>
+                    <div style={{ width: 40, height: 40, borderRadius: 10, flexShrink: 0, background: hoveredLink === label ? 'var(--color-accent-ghost)' : 'rgba(255,255,255,0.06)', border: '1px solid', borderColor: hoveredLink === label ? 'var(--color-accent-border)' : 'rgba(255,255,255,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: hoveredLink === label ? 'var(--color-accent)' : 'rgba(200,210,185,0.6)', transition: 'all 200ms ease' }}>
                       {icon}
                     </div>
                     <div style={{ flex: 1, minWidth: 0 }}>
@@ -709,7 +708,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
                       <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(11px, 1vw, 13px)', color: 'rgba(200,210,185,0.5)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{value}</div>
                     </div>
                     {href && (
-                      <motion.div animate={{ x: hoveredLink === label ? 3 : 0, color: hoveredLink === label ? '#C8F23E' : 'rgba(200,210,185,0.3)' }} transition={{ duration: 0.2 }} style={{ flexShrink: 0 }}>
+                      <motion.div animate={{ x: hoveredLink === label ? 3 : 0, color: hoveredLink === label ? 'var(--color-accent)' : 'rgba(200,210,185,0.3)' }} transition={{ duration: 0.2 }} style={{ flexShrink: 0 }}>
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
                       </motion.div>
                     )}
@@ -726,11 +725,10 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
         </div>
       </div>
 
-      {/* ── BOTTOM BANNER ── */}
-      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} style={{ margin: '0 clamp(20px, 6vw, 96px)', borderRadius: 16, background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)', padding: 'clamp(20px, 3vh, 32px) clamp(24px, 4vw, 48px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'clamp(16px, 2vw, 24px)' }}>
+      <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} style={{ margin: '0 clamp(20px, 6vw, 96px)', borderRadius: 16, background: 'var(--card-bg)', border: '1px solid var(--card-border)', padding: 'clamp(20px, 3vh, 32px) clamp(24px, 4vw, 48px)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 'clamp(16px, 2vw, 24px)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(12px, 2vw, 20px)', flexWrap: 'wrap' }}>
-          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'rgba(200,242,62,0.12)', border: '1px solid rgba(200,242,62,0.25)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#C8F23E" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <div style={{ width: 44, height: 44, borderRadius: '50%', background: 'var(--color-accent-ghost)', border: '1px solid var(--color-accent-border)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--color-accent)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
           </div>
           <div>
             <div style={{ fontFamily: "'Plus Jakarta Sans', sans-serif", fontSize: 'clamp(14px, 1.5vw, 18px)', fontWeight: 700, color: '#fff', marginBottom: 4 }}>
@@ -748,11 +746,11 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
                 fontFamily: "'JetBrains Mono', monospace",
                 fontSize: '10.5px',
                 fontWeight: 600,
-                color: '#C8F23E',
+                color: 'var(--color-accent)',
                 letterSpacing: '0.04em',
               }}
             >
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#C8F23E', boxShadow: '0 0 8px #C8F23E', display: 'inline-block' }} />
+              <span style={{ width: 6, height: 6, borderRadius: '50%', background: 'var(--color-accent)', boxShadow: '0 0 8px var(--color-accent-glow)', display: 'inline-block' }} />
               <span>⚡ Quickest response — replies within 12 hours</span>
             </div>
           </div>
@@ -764,17 +762,17 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 5,
-              background: 'rgba(200, 242, 62, 0.1)',
-              border: '1px solid rgba(200, 242, 62, 0.28)',
+              background: 'var(--color-accent-ghost)',
+              border: '1px solid var(--color-accent-border)',
               padding: '3px 10px',
               borderRadius: 999,
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: '10px',
               fontWeight: 600,
-              color: '#C8F23E',
+              color: 'var(--color-accent)',
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
-              boxShadow: '0 0 10px rgba(200, 242, 62, 0.1)',
+              boxShadow: '0 0 10px var(--color-accent-ghost)',
             }}
           >
             ⚡ Response within 12h
@@ -790,7 +788,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
               display: 'inline-flex',
               alignItems: 'center',
               gap: 8,
-              background: '#C8F23E',
+              background: 'var(--color-accent)',
               color: '#0a0a0f',
               fontFamily: "'Plus Jakarta Sans', sans-serif",
               fontSize: 'clamp(13px, 1.3vw, 15px)',
@@ -802,7 +800,7 @@ export default function Contact({ setCursor, resetCursor, onEasterEgg }) {
               textDecoration: 'none',
               whiteSpace: 'nowrap',
               flexShrink: 0,
-              boxShadow: '0 4px 18px rgba(200,242,62,0.3)',
+              boxShadow: '0 4px 18px var(--color-accent-glow)',
             }}
           >
             Say Hello 👋

@@ -50,6 +50,7 @@ export const PROJECTS = [
     color: '#1A2A3A',
     accentColor: '#4A90A0',
     type: 'caseStudy',
+    link: null,
   },
   {
     id: 'namo',
@@ -73,6 +74,7 @@ export const PROJECTS = [
     color: '#1A1A2A',
     accentColor: '#7A70D0',
     type: 'caseStudy',
+    link: null,
   },
   {
     id: 'dam',
@@ -96,6 +98,7 @@ export const PROJECTS = [
     color: '#1E1A12',
     accentColor: '#C0903A',
     type: 'caseStudy',
+    link: null,
   },
 ];
 

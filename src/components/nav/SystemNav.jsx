@@ -22,7 +22,7 @@ function SoundWaveBars({ active }) {
             width: 2.5,
             height: 16,
             borderRadius: 2,
-            background: active ? '#C8F23E' : 'rgba(255,255,255,0.3)',
+            background: active ? 'var(--color-accent)' : 'rgba(255,255,255,0.3)',
             transformOrigin: 'center',
             transition: 'background 300ms ease',
           }}
@@ -65,9 +65,9 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
         gap: isSmall ? 8 : 10,
         padding: isSmall ? '6px 12px' : '8px 16px',
         background: enabled
-          ? 'rgba(200,242,62,0.1)'
+          ? 'var(--color-accent-ghost)'
           : 'rgba(255,255,255,0.04)',
-        border: `1px solid ${enabled ? 'rgba(200,242,62,0.35)' : 'rgba(255,255,255,0.1)'}`,
+        border: `1px solid ${enabled ? 'var(--color-accent-border)' : 'rgba(255,255,255,0.1)'}`,
         borderRadius: isSmall ? 8 : 12,
         cursor: 'pointer',
         overflow: 'hidden',
@@ -90,7 +90,7 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
               width: 20,
               height: 20,
               borderRadius: '50%',
-              background: enabled ? 'rgba(200,242,62,0.4)' : 'rgba(255,255,255,0.2)',
+              background: enabled ? 'var(--color-accent-glow)' : 'rgba(255,255,255,0.2)',
               pointerEvents: 'none',
             }}
           />
@@ -103,8 +103,8 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
         width: 36,
         height: 20,
         borderRadius: 10,
-        background: enabled ? 'rgba(200,242,62,0.2)' : 'rgba(255,255,255,0.06)',
-        border: `1px solid ${enabled ? 'rgba(200,242,62,0.4)' : 'rgba(255,255,255,0.12)'}`,
+        background: enabled ? 'var(--color-accent-ghost)' : 'rgba(255,255,255,0.06)',
+        border: `1px solid ${enabled ? 'var(--color-accent-border)' : 'rgba(255,255,255,0.12)'}`,
         flexShrink: 0,
         transition: 'background 300ms ease, border-color 300ms ease',
       }}>
@@ -118,8 +118,8 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
             width: 14,
             height: 14,
             borderRadius: '50%',
-            background: enabled ? '#C8F23E' : 'rgba(255,255,255,0.35)',
-            boxShadow: enabled ? '0 0 8px rgba(200,242,62,0.7)' : 'none',
+            background: enabled ? 'var(--color-accent)' : 'rgba(255,255,255,0.35)',
+            boxShadow: enabled ? '0 0 8px var(--color-accent-glow)' : 'none',
             transition: 'background 300ms ease, box-shadow 300ms ease',
           }}
         />
@@ -131,7 +131,7 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
             position: 'absolute',
             inset: 0,
             borderRadius: 10,
-            background: 'linear-gradient(90deg, rgba(200,242,62,0.15), rgba(200,242,62,0.05))',
+            background: 'linear-gradient(90deg, var(--color-accent-glow), transparent)',
             pointerEvents: 'none',
           }}
         />
@@ -142,7 +142,7 @@ function SoundToggle({ enabled, onToggle, setCursor, resetCursor, size = 'normal
 
       {/* Label */}
       <motion.span
-        animate={{ color: enabled ? '#C8F23E' : 'rgba(200,210,185,0.5)' }}
+        animate={{ color: enabled ? 'var(--color-accent)' : 'rgba(200,210,185,0.5)' }}
         transition={{ duration: 0.3 }}
         style={{
           fontFamily: "'JetBrains Mono', monospace",
@@ -171,14 +171,25 @@ const NAV_SECTIONS = [
 ];
 
 const MODES_CONFIG = [
-  { id: 'focus',  label: 'FOCUS',  desc: 'Default' },
-  { id: 'system', label: 'SYSTEM', desc: 'Futuristic' },
-  { id: 'play',   label: 'PLAY',   desc: 'Warm' },
-  { id: 'cinema', label: 'CINEMA', desc: 'Dark' },
+  { id: 'focus',  label: 'Focus',  icon: '🎯', tag: 'Executive Precision', accent: '#C8F23E' },
+  { id: 'system', label: 'System', icon: '⚡', tag: 'Cyber Blueprint HUD', accent: '#00D4FF' },
+  { id: 'play',   label: 'Play',   icon: '🎨', tag: 'Vibrant Creative',    accent: '#FF5E7E' },
+  { id: 'cinema', label: 'Cinema', icon: '🎬', tag: 'Director Cut OLED',   accent: '#E5C07B' },
 ];
 
 /* ── Top navigation bar ─────────────────────────── */
-function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, resetCursor }) {
+function TopBar({
+  activeSection,
+  scrollTo,
+  onToggleNav,
+  isNavOpen,
+  mode = 'focus',
+  setMode,
+  cycleMode,
+  setCursor,
+  resetCursor,
+  sounds,
+}) {
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -186,6 +197,8 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const currentMode = MODES_CONFIG.find((m) => m.id === mode) || MODES_CONFIG[0];
 
   return (
     <motion.nav
@@ -203,11 +216,11 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
         justifyContent: 'space-between',
         padding: '0 clamp(16px, 4vw, 96px)',
         height: '60px',
-        background: scrolled ? 'rgba(6, 6, 10, 0.94)' : 'transparent',
+        background: scrolled ? 'var(--glass-bg)' : 'transparent',
         backdropFilter: scrolled ? 'blur(24px) saturate(1.6)' : 'none',
         WebkitBackdropFilter: scrolled ? 'blur(24px) saturate(1.6)' : 'none',
         borderBottom: scrolled
-          ? '1px solid rgba(255,255,255,0.06)'
+          ? '1px solid var(--color-border)'
           : '1px solid transparent',
         transition: 'background 500ms ease, backdrop-filter 500ms ease, border-color 500ms ease',
       }}
@@ -302,8 +315,60 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
         ))}
       </div>
 
-      {/* Right controls: HQ + CTA + Mobile Menu Button */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}>
+      {/* Right controls: Mode Switcher + HQ + CTA + Mobile Menu Button */}
+      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
+        {/* Mode Switcher Pill */}
+        <motion.button
+          onClick={() => {
+            if (cycleMode) {
+              cycleMode();
+            } else {
+              const curIdx = MODES_CONFIG.findIndex((m) => m.id === mode);
+              const nextMode = MODES_CONFIG[(curIdx + 1) % MODES_CONFIG.length].id;
+              setMode?.(nextMode);
+            }
+            sounds?.click?.();
+          }}
+          onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
+          onMouseLeave={() => resetCursor?.()}
+          whileHover={{ scale: 1.05, borderColor: 'var(--color-accent)' }}
+          whileTap={{ scale: 0.95 }}
+          title={`Active Mode: ${currentMode.label} (${currentMode.tag}). Click to switch theme mode.`}
+          aria-label={`Current mode ${currentMode.label}. Click to switch theme mode.`}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '5px 11px',
+            borderRadius: '10px',
+            background: 'var(--color-surface-2)',
+            border: '1px solid var(--color-border-bright)',
+            cursor: 'pointer',
+            transition: 'border-color 200ms ease, background 200ms ease, box-shadow 200ms ease',
+          }}
+        >
+          <span style={{ fontSize: '12px', lineHeight: 1 }}>{currentMode.icon}</span>
+          <span style={{
+            fontFamily: "'JetBrains Mono', monospace",
+            fontSize: '11px',
+            fontWeight: 700,
+            color: 'var(--color-accent)',
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+          }}>
+            {currentMode.label}
+          </span>
+          <span style={{
+            fontSize: '9px',
+            opacity: 0.5,
+            color: 'var(--color-text-secondary)',
+            fontFamily: 'monospace',
+            marginLeft: '1px',
+          }}>
+            ⇄
+          </span>
+        </motion.button>
+
         {/* HQ Admin button */}
         <motion.a
           href="/admin"
@@ -314,7 +379,7 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
           }}
           onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
           onMouseLeave={() => resetCursor?.()}
-          whileHover={{ scale: 1.08, boxShadow: '0 0 18px rgba(200,242,62,0.35)' }}
+          whileHover={{ scale: 1.08, boxShadow: '0 0 18px var(--color-accent-glow)' }}
           whileTap={{ scale: 0.95 }}
           title="Admin login"
           style={{
@@ -325,9 +390,9 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
             width: 36,
             height: 36,
             borderRadius: '10px',
-            background: 'rgba(200,242,62,0.07)',
-            border: '1px solid rgba(200,242,62,0.25)',
-            color: '#C8F23E',
+            background: 'var(--color-accent-ghost)',
+            border: '1px solid var(--color-accent-border)',
+            color: 'var(--color-accent)',
             fontFamily: "'JetBrains Mono', monospace",
             fontSize: '11px',
             fontWeight: 700,
@@ -336,7 +401,7 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
             textDecoration: 'none',
             position: 'relative',
             overflow: 'hidden',
-            transition: 'border-color 200ms ease, background 200ms ease',
+            transition: 'border-color 200ms ease, background 200ms ease, color 200ms ease',
           }}
         >
           {/* Subtle inner glow */}
@@ -347,7 +412,7 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
               position: 'absolute',
               inset: 0,
               borderRadius: '10px',
-              background: 'radial-gradient(circle at 50% 50%, rgba(200,242,62,0.12), transparent 70%)',
+              background: 'radial-gradient(circle at 50% 50%, var(--color-accent-glow), transparent 70%)',
               pointerEvents: 'none',
             }}
           />
@@ -410,7 +475,7 @@ function TopBar({ activeSection, scrollTo, onToggleNav, isNavOpen, setCursor, re
   );
 }
 
-export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, setCursor, resetCursor, sounds }) {
+export default function SystemNav({ mode, setMode, cycleMode, soundEnabled, onSoundToggle, setCursor, resetCursor, sounds }) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('hero');
 
@@ -456,8 +521,12 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
         scrollTo={scrollTo}
         onToggleNav={toggleNav}
         isNavOpen={isOpen}
+        mode={mode}
+        setMode={setMode}
+        cycleMode={cycleMode}
         setCursor={setCursor}
         resetCursor={resetCursor}
+        sounds={sounds}
       />
 
       {/* Floating Sound Toggle — bottom right */}
@@ -496,8 +565,8 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
           bottom: 'clamp(18px, 3.5vh, 40px)',
           left: 'clamp(18px, 4vw, 52px)',
           zIndex: 200,
-          background: 'rgba(6, 6, 10, 0.92)',
-          border: '1px solid rgba(255,255,255,0.08)',
+          background: 'var(--glass-bg)',
+          border: '1px solid var(--color-border)',
           color: 'var(--color-text-secondary)',
           fontFamily: "'Plus Jakarta Sans', sans-serif",
           fontSize: '11px',
@@ -572,7 +641,7 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
                       key={s.id}
                       x1={`${s.x}%`} y1={`${s.y}%`}
                       x2={`${next.x}%`} y2={`${next.y}%`}
-                      stroke="rgba(200,242,62,0.06)"
+                      stroke="var(--color-accent-ghost)"
                       strokeWidth="1"
                       initial={{ pathLength: 0 }}
                       animate={{ pathLength: 1 }}
@@ -614,9 +683,9 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
                     animate={{
                       width: activeSection === section.id ? 10 : 4,
                       height: activeSection === section.id ? 10 : 4,
-                      background: activeSection === section.id ? '#C8F23E' : '#1C1C22',
+                      background: activeSection === section.id ? 'var(--color-accent)' : '#1C1C22',
                       boxShadow: activeSection === section.id
-                        ? '0 0 18px rgba(200,242,62,0.6)'
+                        ? '0 0 18px var(--color-accent-glow)'
                         : 'none',
                     }}
                     transition={{ duration: 0.3 }}
@@ -669,8 +738,8 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
                   transition={{ delay: i * 0.05, duration: 0.4 }}
                   onClick={() => scrollTo(s.id)}
                   style={{
-                    background: activeSection === s.id ? 'rgba(200, 242, 62, 0.08)' : 'transparent',
-                    border: `1px solid ${activeSection === s.id ? 'rgba(200, 242, 62, 0.3)' : 'rgba(255,255,255,0.06)'}`,
+                    background: activeSection === s.id ? 'var(--color-accent-ghost)' : 'transparent',
+                    border: `1px solid ${activeSection === s.id ? 'var(--color-accent-border)' : 'rgba(255,255,255,0.06)'}`,
                     borderRadius: '10px',
                     padding: '12px 18px',
                     display: 'flex',
@@ -715,7 +784,7 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
               transition={{ delay: 0.35 }}
               style={{
                 width: '100%',
-                maxWidth: '640px',
+                maxWidth: '680px',
                 marginTop: 'auto',
                 paddingTop: '20px',
                 display: 'flex',
@@ -727,41 +796,50 @@ export default function SystemNav({ mode, setMode, soundEnabled, onSoundToggle, 
               }}
             >
               {/* Mode switcher */}
-              <div style={{ display: 'flex', gap: '5px', alignItems: 'center', flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
                 <span style={{
                   fontFamily: "'JetBrains Mono', monospace",
-                  fontSize: '7px',
-                  letterSpacing: '0.2em',
+                  fontSize: '9px',
+                  letterSpacing: '0.18em',
                   color: 'var(--color-text-tertiary)',
                   textTransform: 'uppercase',
-                  marginRight: '10px',
+                  marginRight: '6px',
                 }}>
-                  MODE
+                  THEME MODE
                 </span>
-                {MODES_CONFIG.map((m) => (
-                  <button
-                    key={m.id}
-                    onClick={() => { setMode(m.id); sounds?.click(); }}
-                    onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
-                    onMouseLeave={() => resetCursor?.()}
-                    style={{
-                      background: mode === m.id ? 'var(--color-accent)' : 'rgba(255,255,255,0.04)',
-                      border: `1px solid ${mode === m.id ? 'var(--color-accent)' : 'rgba(255,255,255,0.08)'}`,
-                      color: mode === m.id ? '#060608' : 'var(--color-text-secondary)',
-                      fontFamily: "'Plus Jakarta Sans', sans-serif",
-                      fontSize: '11px',
-                      fontWeight: 600,
-                      letterSpacing: '0.01em',
-                      padding: '6px 14px',
-                      cursor: 'pointer',
-                      textTransform: 'capitalize',
-                      borderRadius: '6px',
-                      transition: 'all 200ms ease',
-                    }}
-                  >
-                    {m.label.charAt(0) + m.label.slice(1).toLowerCase()}
-                  </button>
-                ))}
+                {MODES_CONFIG.map((m) => {
+                  const isActive = mode === m.id;
+                  return (
+                    <motion.button
+                      key={m.id}
+                      onClick={() => { setMode(m.id); sounds?.click(); }}
+                      onMouseEnter={() => setCursor?.(CURSOR_STATES.HOVER)}
+                      onMouseLeave={() => resetCursor?.()}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      style={{
+                        background: isActive ? 'var(--color-accent)' : 'rgba(255,255,255,0.04)',
+                        border: `1px solid ${isActive ? 'var(--color-accent)' : 'rgba(255,255,255,0.08)'}`,
+                        color: isActive ? '#060608' : 'var(--color-text-secondary)',
+                        fontFamily: "'Plus Jakarta Sans', sans-serif",
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        letterSpacing: '0.01em',
+                        padding: '6px 14px',
+                        cursor: 'pointer',
+                        borderRadius: '8px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '6px',
+                        boxShadow: isActive ? '0 0 16px var(--color-accent-glow)' : 'none',
+                        transition: 'all 200ms ease',
+                      }}
+                    >
+                      <span style={{ fontSize: '13px' }}>{m.icon}</span>
+                      <span>{m.label}</span>
+                    </motion.button>
+                  );
+                })}
               </div>
 
               {/* Sound toggle */}

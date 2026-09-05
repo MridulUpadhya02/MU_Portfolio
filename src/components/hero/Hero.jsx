@@ -36,10 +36,10 @@ function CrossHairAccent() {
       aria-hidden="true"
     >
       <svg viewBox="0 0 52 52" style={{ width: '100%', height: '100%' }}>
-        <line x1="26" y1="0" x2="26" y2="52" stroke="#C8F23E" strokeWidth="0.6"/>
-        <line x1="0" y1="26" x2="52" y2="26" stroke="#C8F23E" strokeWidth="0.6"/>
-        <circle cx="26" cy="26" r="8" fill="none" stroke="#C8F23E" strokeWidth="0.6"/>
-        <circle cx="26" cy="26" r="2" fill="#C8F23E"/>
+        <line x1="26" y1="0" x2="26" y2="52" stroke="var(--color-accent)" strokeWidth="0.6"/>
+        <line x1="0" y1="26" x2="52" y2="26" stroke="var(--color-accent)" strokeWidth="0.6"/>
+        <circle cx="26" cy="26" r="8" fill="none" stroke="var(--color-accent)" strokeWidth="0.6"/>
+        <circle cx="26" cy="26" r="2" fill="var(--color-accent)"/>
       </svg>
     </div>
   );
@@ -576,9 +576,9 @@ export default function Hero({ setCursor, resetCursor, onNameClick }) {
 
               {/* ── Orbiting dots ── */}
               {[
-                { delay: '0s', size: 5, r: 'clamp(118, 13.5vw, 188)', color: '#C8F23E', dur: '4.5s' },
-                { delay: '-2.25s', size: 3, r: 'clamp(118, 13.5vw, 188)', color: 'rgba(200,242,62,0.5)', dur: '4.5s' },
-                { delay: '-3.5s', size: 4, r: 'clamp(126, 14.5vw, 200)', color: '#9B7FFF', dur: '7s' },
+                { delay: '0s', size: 5, r: 'clamp(118, 13.5vw, 188)', color: 'var(--color-accent)', dur: '4.5s' },
+                { delay: '-2.25s', size: 3, r: 'clamp(118, 13.5vw, 188)', color: 'var(--color-accent-soft)', dur: '4.5s' },
+                { delay: '-3.5s', size: 4, r: 'clamp(126, 14.5vw, 200)', color: 'var(--color-accent-2)', dur: '7s' },
               ].map((dot, i) => (
                 <div key={i} style={{
                   position: 'absolute',
@@ -635,6 +635,8 @@ export default function Hero({ setCursor, resetCursor, onNameClick }) {
                 <img
                   src="/profile.jpg"
                   alt="Mridul Upadhya — Product Manager"
+                  fetchPriority="high"
+                  decoding="async"
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     e.currentTarget.nextSibling.style.display = 'flex';

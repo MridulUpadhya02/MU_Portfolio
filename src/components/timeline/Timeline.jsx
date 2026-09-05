@@ -202,7 +202,7 @@ export default function Timeline() {
               fontSize: 'clamp(36px, 5vw, 68px)',
               color: 'var(--color-text-primary)', lineHeight: 1.05, margin: 0,
             }}
-          >THE <span style={{ color: '#C8F23E' }}>JOURNEY</span></motion.h2>
+          >THE <span style={{ color: 'var(--color-accent)' }}>JOURNEY</span></motion.h2>
 
           {/* Desktop arrow controls */}
           {!isMobile && (
@@ -222,7 +222,7 @@ export default function Timeline() {
                     style={{
                       width: activeIndex === i ? 20 : 6,
                       height: 6, borderRadius: 3,
-                      background: activeIndex === i ? '#C8F23E' : 'rgba(255,255,255,0.06)',
+                      background: activeIndex === i ? 'var(--color-accent)' : 'rgba(255,255,255,0.06)',
                       border: 'none', cursor: 'pointer',
                       transition: 'all 0.3s ease', padding: 0,
                     }}
@@ -252,8 +252,8 @@ export default function Timeline() {
                 style={{
                   width: 40, height: 40, borderRadius: 2,
                   background: 'transparent', border: '1px solid',
-                  borderColor: activeIndex === timelineStages.length - 1 ? 'rgba(255,255,255,0.05)' : '#C8F23E',
-                  color: activeIndex === timelineStages.length - 1 ? 'rgba(255,255,255,0.15)' : '#C8F23E',
+                  borderColor: activeIndex === timelineStages.length - 1 ? 'rgba(255,255,255,0.05)' : 'var(--color-accent)',
+                  color: activeIndex === timelineStages.length - 1 ? 'rgba(255,255,255,0.15)' : 'var(--color-accent)',
                   cursor: activeIndex === timelineStages.length - 1 ? 'default' : 'pointer',
                   fontSize: 16, transition: 'all 0.2s',
                   display: 'flex', alignItems: 'center', justifyContent: 'center',
