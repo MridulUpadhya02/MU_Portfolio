@@ -27,19 +27,37 @@ function setStoredPasscode(newCode) {
    AUTHENTICATION LOGIN GATE
 ───────────────────────────────────────────────────────────── */
 function AdminLoginGate({ onLoginSuccess, onBack }) {
+  const { verifyPasscode } = usePortfolioData();
   const [passcode, setPasscode] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!passcode) return;
     setLoading(true);
     setError(false);
 
-    setTimeout(() => {
+    try {
+      const isValid = await verifyPasscode(passcode);
+      if (isValid) {
+        const token = `auth_token_${Date.now()}`;
+        if (rememberMe) {
+          localStorage.setItem(AUTH_STORAGE_KEY, token);
+        } else {
+          sessionStorage.setItem(AUTH_STORAGE_KEY, token);
+        }
+        sessionStorage.setItem('mridul_hq_active_passcode', passcode.trim());
+        setStoredPasscode(passcode.trim());
+        onLoginSuccess();
+      } else {
+        setError(true);
+        setLoading(false);
+      }
+    } catch (err) {
+      console.error('Login verification error:', err);
       const stored = getStoredPasscode();
       if (passcode.trim() === stored.trim()) {
         const token = `auth_token_${Date.now()}`;
@@ -48,12 +66,13 @@ function AdminLoginGate({ onLoginSuccess, onBack }) {
         } else {
           sessionStorage.setItem(AUTH_STORAGE_KEY, token);
         }
+        sessionStorage.setItem('mridul_hq_active_passcode', passcode.trim());
         onLoginSuccess();
       } else {
         setError(true);
         setLoading(false);
       }
-    }, 350);
+    }
   };
 
   return (
@@ -357,7 +376,19 @@ const TABS = [
 ];
 
 export default function AdminPanel({ onBack }) {
-  const { data, updateSection, updateFullData, resetToDefaults, hasCustomizations } = usePortfolioData();
+  const {
+    data,
+    updateSection,
+    updateFullData,
+    resetToDefaults,
+    hasCustomizations,
+    isSupabaseActive,
+    syncStatus,
+    isSaving,
+    lastSyncedAt,
+    syncError,
+    refreshData,
+  } = usePortfolioData();
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     try {
       return Boolean(sessionStorage.getItem(AUTH_STORAGE_KEY) || localStorage.getItem(AUTH_STORAGE_KEY));
@@ -480,19 +511,56 @@ export default function AdminPanel({ onBack }) {
             <div style={{
               fontFamily: "'JetBrains Mono', monospace",
               fontSize: '10px',
-              color: hasCustomizations ? '#C8F23E' : 'rgba(255,255,255,0.4)',
+              color: syncStatus === 'error' ? '#FF6B6B' : syncStatus === 'synced' ? '#C8F23E' : 'rgba(255,255,255,0.6)',
               display: 'flex',
               alignItems: 'center',
               gap: '6px',
             }}>
-              <span>●</span>
-              <span>{hasCustomizations ? 'Custom live data active (LocalStorage)' : 'Default system data active'}</span>
+              <span style={{
+                width: 7,
+                height: 7,
+                borderRadius: '50%',
+                background: isSaving ? '#FFB800' : syncStatus === 'synced' ? '#C8F23E' : syncStatus === 'error' ? '#FF6B6B' : '#888',
+                boxShadow: isSaving ? '0 0 8px #FFB800' : syncStatus === 'synced' ? '0 0 8px #C8F23E' : 'none',
+                display: 'inline-block',
+              }} />
+              <span>
+                {isSaving
+                  ? '⚡ Syncing changes with Supabase...'
+                  : isSupabaseActive
+                    ? `Supabase Realtime Synced (Multi-Device Active)${lastSyncedAt ? ` • Last: ${new Date(lastSyncedAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' })}` : ''}`
+                    : 'Local Cache Mode (Supabase env variables not configured)'}
+              </span>
             </div>
           </div>
         </div>
 
         {/* Right action buttons */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+          {isSupabaseActive && (
+            <button
+              onClick={async () => {
+                await refreshData();
+                showToast('Synchronized with Supabase!');
+              }}
+              title="Pull latest live data from Supabase across all devices"
+              style={{
+                background: 'rgba(200, 242, 62, 0.08)',
+                border: '1px solid rgba(200, 242, 62, 0.25)',
+                color: '#C8F23E',
+                borderRadius: '8px',
+                padding: '7px 12px',
+                fontSize: '12px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 600,
+              }}
+            >
+              <span>⚡</span> Pull Sync
+            </button>
+          )}
           <input
             type="file"
             ref={fileInputRef}
@@ -723,18 +791,16 @@ export default function AdminPanel({ onBack }) {
 }
 
 function SecurityCard({ showToast }) {
+  const { changePasscode, isSupabaseActive } = usePortfolioData();
   const [current, setCurrent] = useState('');
   const [newCode, setNewCode] = useState('');
   const [confirmCode, setConfirmCode] = useState('');
+  const [isUpdating, setIsUpdating] = useState(false);
   const [msg, setMsg] = useState(null);
 
-  const handleUpdate = (e) => {
+  const handleUpdate = async (e) => {
     e.preventDefault();
-    const stored = getStoredPasscode();
-    if (current.trim() !== stored.trim()) {
-      setMsg({ type: 'error', text: 'Current passcode is incorrect.' });
-      return;
-    }
+    setMsg(null);
     if (!newCode || newCode.length < 4) {
       setMsg({ type: 'error', text: 'New passcode must be at least 4 characters.' });
       return;
@@ -743,12 +809,26 @@ function SecurityCard({ showToast }) {
       setMsg({ type: 'error', text: 'New passcodes do not match.' });
       return;
     }
-    setStoredPasscode(newCode.trim());
-    setCurrent('');
-    setNewCode('');
-    setConfirmCode('');
-    setMsg({ type: 'success', text: 'Master passcode updated successfully!' });
-    showToast?.('Master passcode updated!');
+
+    setIsUpdating(true);
+    try {
+      await changePasscode(current.trim(), newCode.trim());
+      setStoredPasscode(newCode.trim());
+      setCurrent('');
+      setNewCode('');
+      setConfirmCode('');
+      setMsg({
+        type: 'success',
+        text: isSupabaseActive
+          ? 'Master passcode updated centrally in Supabase across all devices!'
+          : 'Master passcode updated locally!'
+      });
+      showToast?.('Master passcode updated!');
+    } catch (err) {
+      setMsg({ type: 'error', text: err.message || 'Current passcode is incorrect.' });
+    } finally {
+      setIsUpdating(false);
+    }
   };
 
   return (
